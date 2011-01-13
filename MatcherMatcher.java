@@ -22,19 +22,20 @@ public final class MatcherMatcher<T> extends TypeSafeDiagnosingMatcher<Matcher<T
         this.mismatchDescriptionMatcher = mismatchDescription;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Factory
-    public static <X> MatcherMatcher<X> a_matcher_with_description(Matcher<? super String> description) {
-        return new MatcherMatcher<X>(MatchType.HAS_DESCRIPTION, null, description, null);
+    public static Matcher<Object> a_matcher_with_description(Matcher<? super String> description) {
+        return new MatcherMatcher(MatchType.HAS_DESCRIPTION, null, description, null);
     }
     
     @Factory
-    public static <X> MatcherMatcher<X> a_matcher_that_matches(X target) {
-        return new MatcherMatcher<X>(MatchType.MATCHES, target, null, null);
+    public static <X> MatcherMatcher<X> a_matcher_that_matches(X matchedItem) {
+        return new MatcherMatcher<X>(MatchType.MATCHES, matchedItem, null, null);
     }
 
     @Factory
-    public static <X> MatcherMatcher<X> a_matcher_describing_the_mismatch_of(X target, Matcher<? super String> mismatchDescription) {
-        return new MatcherMatcher<X>(MatchType.MISMATCHES, target, null, mismatchDescription);
+    public static <X> MatcherMatcher<X> a_matcher_giving_a_mismatch_description_of(X mismatchingItem, Matcher<? super String> mismatchDescription) {
+        return new MatcherMatcher<X>(MatchType.MISMATCHES, mismatchingItem, null, mismatchDescription);
     }
     
     @Override
