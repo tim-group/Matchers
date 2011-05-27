@@ -1,6 +1,5 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.Description;
@@ -14,14 +13,12 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
     }
 
     protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, Matcher<T>[] expected) {
-        List<T> actualList = new ArrayList<T>();
-        for (T t : actual) {
-            actualList.add(t);
-        }
-        if (actualList.isEmpty()) {
-            mismatchDescription.appendText("the actual collection was empty ");
+        List<T> actualList = listOf(actual);
+        
+        if (actualCollectionIsEmpty(mismatchDescription, actualList)) {
             return;
-        } 
+        }
+        
         if (actualList.size() != expected.length)  {
             mismatchDescription.appendText(String.format("expected size %d, actual size %d; ", expected.length, actualList.size()));
         }
@@ -46,4 +43,6 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
             }
         }
     }
+
+
 }

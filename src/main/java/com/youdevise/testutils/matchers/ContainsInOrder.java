@@ -1,6 +1,5 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.Description;
@@ -14,10 +13,8 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
     }
 
     protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, Matcher<T>[] expected) {
-        List<T> actualList = new ArrayList<T>();
-        for (T t : actual) {
-            actualList.add(t);
-        }
+        List<T> actualList = listOf(actual);
+        
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
             return;
