@@ -6,35 +6,14 @@ import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-public class ContainsInOrder<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
-    
-    private final Matcher<Iterable<T>> contains;
-    private final Matcher<T>[] expected;
+public class ContainsInOrder<T> extends CollectionMatcher<T> {
     
     public ContainsInOrder(Matcher<T>[] expected) {
-        this.expected = expected;
-        contains = (expected == null || expected.length == 0) ? Matchers.<T>emptyIterable() : Matchers.<T>contains(expected);
+        super(expected, (expected == null || expected.length == 0) ? Matchers.<T>emptyIterable() : Matchers.<T>contains(expected));
     }
 
-    @Override
-    public void describeTo(Description description) {
-        contains.describeTo(description);
-    }
-
-    @Override
-    protected boolean matchesSafely(Iterable<T> actual, Description mismatchDescription) {
-        List<T> actualList = new ArrayList<T>();
-        for (T t : actual) {
-            actualList.add(t);
-        }
-        diagnoseFailures(actual, mismatchDescription);
-        mismatchDescription.appendText("\n\tComplete actual iterable: ").appendValue(actualList);
-        return contains.matches(actual);
-    }
-
-    private void diagnoseFailures(Iterable<T> actual, Description mismatchDescription) {
+    protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, Matcher<T>[] expected) {
         List<T> actualList = new ArrayList<T>();
         for (T t : actual) {
             actualList.add(t);
@@ -60,10 +39,10 @@ public class ContainsInOrder<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
                 mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(actualList.get(i));
             }
         } 
-        describeNonCorrespondances(mismatchDescription, actualList);
+        describeNonCorrespondances(mismatchDescription, actualList, expected);
     }
 
-    private void describeNonCorrespondances(Description mismatchDescription, List<T> actualList) {
+    private void describeNonCorrespondances(Description mismatchDescription, List<T> actualList, Matcher<T>[] expected) {
         boolean first = true;
         for (int i = 0; i < Math.min(expected.length, actualList.size()); i++) {
             if (itemsDontCorrespond(actualList.get(i), expected[i])) {

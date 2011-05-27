@@ -6,36 +6,14 @@ import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-public class ContainsInAnyOrder<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
-    
-    private final Matcher<Iterable<T>> contains;
-    private final Matcher<T>[] expected;
+public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
     
     public ContainsInAnyOrder(Matcher<T>[] expected) {
-        this.expected = expected;
-        contains = (expected == null || expected.length == 0) ? Matchers.<T>emptyIterable() : Matchers.<T>containsInAnyOrder(expected);
+        super(expected, (expected == null || expected.length == 0) ? Matchers.<T>emptyIterable() : Matchers.<T>containsInAnyOrder(expected));
     }
 
-    @Override
-    public void describeTo(Description description) {
-        contains.describeTo(description);
-    }
-
-    @Override
-    protected boolean matchesSafely(Iterable<T> actuals, Description mismatchDescription) {
-        List<T> actualList = new ArrayList<T>();
-        for (T t : actuals) {
-            actualList.add(t);
-        }
-        
-        diagnoseFailures(actuals, mismatchDescription);
-        mismatchDescription.appendText("\n\tComplete actual iterable: ").appendValue(actualList);
-        return contains.matches(actuals);
-    }
-
-    private void diagnoseFailures(Iterable<T> actual, Description mismatchDescription) {
+    protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, Matcher<T>[] expected) {
         List<T> actualList = new ArrayList<T>();
         for (T t : actual) {
             actualList.add(t);
