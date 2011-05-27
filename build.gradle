@@ -1,0 +1,26 @@
+releaseVersion = '0.0'
+
+apply plugin: 'eclipse'
+//apply plugin: 'idea' // by all means use this fine IDE, but it's opt-in.
+apply plugin: 'java'
+apply plugin: 'yd'
+apply plugin: 'code-quality'
+
+dependencies {
+    // these will vary, but think about logging. It's a user interface.
+    compile group: 'log4j',  name: 'log4j', version: '1.2.15'
+
+    testCompile     group: "junit",         name: 'junit-dep',           version: "4.8.2"
+    testCompile     group: 'org.hamcrest',  name: 'hamcrest-all',        version: '1.2'
+}
+
+// this block is here to tell Gradle to fetch our youDevise plugins.
+// so don't edit anything below this point unless you have to
+buildscript {
+    repositories {
+        mavenRepo name: 'ydCentral', urls: "${repoUrl}/groups/public"
+    }
+    dependencies {
+        classpath group: 'com.youdevise', name: 'gradle-plugins', version: "0.+"
+    }
+}
