@@ -7,18 +7,19 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
 public class ContainsInOrder<T> extends CollectionMatcher<T> {
-    
+
     public ContainsInOrder(Matcher<T>[] expected) {
         super(expected, (expected == null || expected.length == 0) ? Matchers.<T>emptyIterable() : Matchers.<T>contains(expected));
     }
 
+    @Override
     protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, Matcher<T>[] expected) {
         List<T> actualList = listOf(actual);
-        
+
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
             return;
-        } 
+        }
         if (Matchers.containsInAnyOrder(expected).matches(actual)) {
             mismatchDescription.appendText("actual list had the right items but in the wrong order! ");
         }
@@ -28,14 +29,14 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
             for (int i = actualList.size(); i < expected.length; i++) {
                 mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(expected[i]);
             }
-        } 
+        }
         if (actualList.size() > expected.length)  {
             mismatchDescription.appendText(String.format("expected size %d, actual size %d; ", expected.length, actualList.size()));
             mismatchDescription.appendText("\n\tUnexpected items: ");
             for (int i = expected.length; i < actualList.size(); i++) {
                 mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(actualList.get(i));
             }
-        } 
+        }
         describeNonCorrespondances(mismatchDescription, actualList, expected);
     }
 

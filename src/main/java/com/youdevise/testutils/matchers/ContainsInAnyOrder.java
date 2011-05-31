@@ -7,18 +7,19 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
 public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
-    
+
     public ContainsInAnyOrder(Matcher<T>[] expected) {
         super(expected, (expected == null || expected.length == 0) ? Matchers.<T>emptyIterable() : Matchers.<T>containsInAnyOrder(expected));
     }
 
+    @Override
     protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, Matcher<T>[] expected) {
         List<T> actualList = listOf(actual);
-        
+
         if (actualCollectionIsEmpty(mismatchDescription, actualList)) {
             return;
         }
-        
+
         if (actualList.size() != expected.length)  {
             mismatchDescription.appendText(String.format("expected size %d, actual size %d; ", expected.length, actualList.size()));
         }
@@ -34,8 +35,8 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
         }
         first = true;
         for (int i = 0; i < actualList.size(); i++) {
-            if ( !Matchers.anyOf(expected).matches(actualList.get(i))) {  
-                if (first) {            
+            if ( !Matchers.anyOf(expected).matches(actualList.get(i))) {
+                if (first) {
                     mismatchDescription.appendText("\n\tUnexpected items: ");
                     first = false;
                 }
