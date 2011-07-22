@@ -56,14 +56,13 @@ public class Contains {
         return new ContainsTheItems<T>(expected);
     }
     
-    @SuppressWarnings("unchecked")
     public static <T> Matcher<Iterable<T>> theItem(final Matcher<T> expected) {
-        return theItems(expected);
+        return new ContainsTheItem<T>(expected);
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static <T> Matcher<Iterable<T>> theItem(final T expected) {
-        return theItems(expected);
+        return theItem((Matcher)Matchers.is(expected));
     }
     
     

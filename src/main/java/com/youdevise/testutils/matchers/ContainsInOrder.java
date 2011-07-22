@@ -49,8 +49,9 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
                     first = false;
                 }
                 mismatchDescription.appendText("\n\t  ").appendValue(i + 1)
-                    .appendText(" Expected ").appendValue(expected[i])
-                    .appendText(" but was ").appendValue(actualList.get(i));
+                    .appendText(" Expected (").appendDescriptionOf(expected[i]).appendText(")")
+                    .appendText(" but ");
+                expected[i].describeMismatch(actualList.get(i), mismatchDescription);
             }
         }
     }

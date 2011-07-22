@@ -12,9 +12,11 @@ import static org.hamcrest.Matchers.not;
 import java.util.Arrays;
 import java.util.List;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.StringDescription;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Test;
 
 public class ContainsInOrderMatcherTest {
@@ -122,8 +124,8 @@ public class ContainsInOrderMatcherTest {
         assertThat(containsOneTwo, is(not(a_matcher_that_matches(listOfOneThree))));
         assertThat(containsOneTwo, is(a_matcher_with_description(containsString("[\"a\", \"b\", \"c\"]"))));
         assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("Items that did not match their corresponding expectations:"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<2> Expected <\"b\"> but was \"c\""))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<3> Expected <\"c\"> but was \"d\""))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<2> Expected (\"b\") but was \"c\""))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<3> Expected (\"c\") but was \"d\""))));
     }
 
 
@@ -138,8 +140,8 @@ public class ContainsInOrderMatcherTest {
         assertThat(containsOneTwo, is(not(a_matcher_that_matches(listOfOneThree))));
         assertThat(containsOneTwo, is(a_matcher_with_description(containsString("[\"a\", \"b\", \"c\", \"d\"]"))));
         assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("Items that did not match their corresponding expectations:"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<2> Expected <\"b\"> but was \"c\""))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<3> Expected <\"c\"> but was \"d\""))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<2> Expected (\"b\") but was \"c\""))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<3> Expected (\"c\") but was \"d\""))));
         assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("Items that were expected, but not present:"))));
         assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("\"d\""))));
 
@@ -156,7 +158,7 @@ public class ContainsInOrderMatcherTest {
         assertThat(containsOneTwo, is(not(a_matcher_that_matches(listOfOneThree))));
         assertThat(containsOneTwo, is(a_matcher_with_description(containsString("[\"a\", \"b\", \"c\"]"))));
         assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("Items that did not match their corresponding expectations:"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<2> Expected <\"b\"> but was \"c\""))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("<2> Expected (\"b\") but was \"c\""))));
         assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("Unexpected items:"))));
         assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("\"d\""))));
     }
@@ -191,7 +193,7 @@ public class ContainsInOrderMatcherTest {
         assertThat(containsOneTwo, is(not(a_matcher_that_matches(listOfOneNull))));
         assertThat(containsOneTwo, is(a_matcher_with_description(containsString("[\"a\", \"b\"]"))));
         assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneNull, containsString("Items that did not match their corresponding expectations:"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneNull, containsString("<2> Expected <\"b\"> but was null"))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneNull, containsString("<2> Expected (\"b\") but was null"))));
   
     }
     
@@ -227,7 +229,7 @@ public class ContainsInOrderMatcherTest {
         assertThat(containsaNull, is(not(a_matcher_that_matches(listOfab))));
         assertThat(containsaNull, is(a_matcher_with_description(containsString("[\"a\", null]"))));
         assertThat(containsaNull, is(a_matcher_giving_a_mismatch_description_of(listOfab, containsString("Items that did not match their corresponding expectations:"))));
-        assertThat(containsaNull, is(a_matcher_giving_a_mismatch_description_of(listOfab, containsString("<2> Expected <null> but was \"b\""))));
+        assertThat(containsaNull, is(a_matcher_giving_a_mismatch_description_of(listOfab, containsString("<2> Expected (null) but was \"b\""))));
 
     }
     
@@ -238,6 +240,84 @@ public class ContainsInOrderMatcherTest {
         List<String> listOfAAABBB = Arrays.<String>asList("aaaaaa", "bbbbbbbbbb");
         assertThat(containsAB, is(a_matcher_that_matches(listOfAAABBB)));
     }
+    
+    public static class ABean {
+        private String name;
+        private Integer length;
+        public ABean(String name, Integer length) {
+            this.setName(name);
+            this.setLength(length);
+        }
+        public String getName() {
+            return name;
+        }
+        public void setName(String name) {
+            this.name = name;
+        }
+        public Integer getLength() {
+            return length;
+        }
+        public void setLength(Integer length) {
+            this.length = length;
+        }
+    }
+    
+    public static class ABeanMatcher extends TypeSafeDiagnosingMatcher<ABean> {
+        
+        private Matcher<? extends String> expectedName = Matchers.any(String.class);
+        private Matcher<? extends Integer> expectedLength = Matchers.any(Integer.class);
+
+        public ABeanMatcher(Matcher<? extends String> expectedName, Matcher<? extends Integer> expectedLength) {
+            this.expectedName = expectedName;
+            this.expectedLength = expectedLength;
+        }
+        
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        public static ABeanMatcher matching(Matcher expectedName, Matcher expectedLength) {
+            return new ABeanMatcher(expectedName, expectedLength);
+        }
+        
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        public static ABeanMatcher matching(String expectedName, Integer expectedLength) {
+            return new ABeanMatcher((Matcher)Matchers.is(expectedName), (Matcher)Matchers.is(expectedLength));
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText(" name:").appendDescriptionOf(expectedName);
+            description.appendText(" length:").appendDescriptionOf(expectedLength);
+        }
+
+        @Override
+        protected boolean matchesSafely(ABean item, Description mismatchDescription) {
+            if (!expectedLength.matches(item.length)) {
+                mismatchDescription.appendText("length ");
+                expectedLength.describeMismatch(item.length, mismatchDescription);
+                return false;
+            }
+            if (!expectedName.matches(item.name)) {
+                mismatchDescription.appendText("name ");
+                expectedName.describeMismatch(item.name, mismatchDescription);
+                return false;
+            }
+            return true;
+        }
+        
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test public void
+    displays_details_of_which_field_of_a_complex_object_fails_to_match() {
+        Matcher<Iterable<ABean>> banana3apple1 = Contains.inOrder(ABeanMatcher.matching(containsString("an"), is(3)), 
+                                                                  ABeanMatcher.matching(containsString("ppl"), is(1)));
+        
+        List<ABean> aBigApple = Arrays.<ABean>asList(new ABean("Banana", 3), new ABean("Apple", 2));
+        
+        assertThat(banana3apple1, is(not(a_matcher_that_matches(aBigApple))));
+        assertThat(banana3apple1, is(a_matcher_giving_a_mismatch_description_of(aBigApple, containsString("Items that did not match their corresponding expectations:"))));
+        assertThat(banana3apple1, is(a_matcher_giving_a_mismatch_description_of(aBigApple, containsString("length was <2>"))));
+    }
+
     
     private void listOutput(Matcher<Iterable<String>> containsOne, List<String> emptyList) {
         StringDescription description = new StringDescription();
