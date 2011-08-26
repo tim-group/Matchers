@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/test/java"/>
-	<classpathentry kind="lib" path="gradle/wrapper/gradle-wrapper.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/DataType/lib/hamcrest-all-1.2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER" exported="true"/>
+	<classpathentry sourcepath="GRADLE_CACHE/javax.mail/mail/sources/mail-1.4-sources.jar" kind="var" path="GRADLE_CACHE/javax.mail/mail/jars/mail-1.4.jar" exported="true"/>
+	<classpathentry sourcepath="GRADLE_CACHE/junit/junit-dep/sources/junit-dep-4.9-sources.jar" kind="var" path="GRADLE_CACHE/junit/junit-dep/jars/junit-dep-4.9.jar" exported="true"/>
+	<classpathentry sourcepath="GRADLE_CACHE/log4j/log4j/sources/log4j-1.2.15-sources.jar" kind="var" path="GRADLE_CACHE/log4j/log4j/jars/log4j-1.2.15.jar" exported="true"/>
+	<classpathentry sourcepath="GRADLE_CACHE/javax.activation/activation/sources/activation-1.1-sources.jar" kind="var" path="GRADLE_CACHE/javax.activation/activation/jars/activation-1.1.jar" exported="true"/>
+	<classpathentry kind="var" path="GRADLE_CACHE/org.hamcrest/hamcrest-all/jars/hamcrest-all-1.2.jar" exported="true"/>
+	<classpathentry kind="var" path="GRADLE_CACHE/com.sun.jdmk/jmxtools/jars/jmxtools-1.2.1.jar" exported="true"/>
+	<classpathentry kind="var" path="GRADLE_CACHE/javax.jms/jms/jars/jms-1.1.jar" exported="true"/>
+	<classpathentry kind="var" path="GRADLE_CACHE/com.sun.jmx/jmxri/jars/jmxri-1.2.1.jar" exported="true"/>
 </classpath>
