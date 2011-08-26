@@ -1,6 +1,7 @@
 package com.youdevise.testutils.matchers;
 
 import com.youdevise.testutils.operations.Action;
+import com.youdevise.testutils.operations.ActionResult;
 
 import org.junit.Test;
 
@@ -8,6 +9,7 @@ import static com.youdevise.testutils.matchers.ExceptionMatcher.throwsException;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
+import static com.youdevise.testutils.operations.ActionRunner.running;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -35,21 +37,21 @@ public class ExceptionMatcherTest {
         assertThat(throwsException(exception), is(a_matcher_that_matches(throwException(exception))));
     }
 
-    private static Action doNothing() {
-        return new Action() {
+    private static ActionResult doNothing() {
+        return running(new Action() {
             @Override
             public void execute() {
                 // do nothing
             }
-        };
+        });
     }
 
-    private static Action throwException(final Exception exception) {
-        return new Action() {
+    private static ActionResult throwException(final Exception exception) {
+        return running(new Action() {
             @Override
             public void execute() throws Exception {
                 throw exception;
             }
-        };
+        });
     }
 }
