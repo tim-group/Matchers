@@ -4,42 +4,64 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-public class ExceptionMatcher<T extends Exception> extends TypeSafeDiagnosingMatcher<T> {
-    private final Class<T> exceptionClass;
-    private String message;
-    private Matcher<? extends Exception> cause;
+public class ExceptionMatcher extends TypeSafeDiagnosingMatcher<Exception> {
+    private final Class<? extends Exception> expectedExceptionClass;
+    private String expectedMessage;
+    private Matcher<? extends Exception> expectedCause;
 
-    public ExceptionMatcher(Class<T> exceptionClass) {
-        this.exceptionClass = exceptionClass;
+    private ExceptionMatcher(Class<? extends Exception> exceptionClass) {
+        this.expectedExceptionClass = exceptionClass;
     }
 
-    public static <T extends Exception> ExceptionMatcher<T> anExceptionOfType(Class<T> exceptionClass) {
-        return new ExceptionMatcher<T>(exceptionClass);
+    public static ExceptionMatcher anExceptionOfType(Class<? extends Exception> exceptionClass) {
+        return new ExceptionMatcher(exceptionClass);
     }
 
-    public ExceptionMatcher<T> withTheMessage(String message) {
-        this.message = message;
+    public ExceptionMatcher withTheMessage(String message) {
+        this.expectedMessage = message;
         return this;
     }
 
-    public ExceptionMatcher<T> causedBy(Matcher<? extends Exception> cause) {
-        this.cause = cause;
+    public ExceptionMatcher causedBy(Matcher<? extends Exception> cause) {
+        this.expectedCause = cause;
         return this;
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("a <").appendText(exceptionClass.getName()).appendText(">");
-        if (message != null) {
-            description.appendText(" with the message ").appendValue(message);
+        description.appendText("a <").appendText(expectedExceptionClass.getName()).appendText(">");
+        if (expectedMessage != null) {
+            description.appendText(" with the message ").appendValue(expectedMessage);
         }
-        if (cause != null) {
-            description.appendText(" caused by ").appendDescriptionOf(cause);
+        if (expectedCause != null) {
+            description.appendText(" caused by ").appendDescriptionOf(expectedCause);
         }
     }
 
     @Override
     protected boolean matchesSafely(Exception exception, Description mismatchDescription) {
-        throw new UnsupportedOperationException();
+        Class<? extends Exception> actualExceptionClass = exception.getClass();
+        if (!expectedExceptionClass.equals(actualExceptionClass)) {
+            mismatchDescription.appendText("was a <").appendText(actualExceptionClass.getName()).appendText(">");
+            return false;
+        }
+
+        String actualMessage = exception.getMessage();
+        if (expectedMessage != null && !expectedMessage.equals(actualMessage)) {
+            mismatchDescription.appendText("had the message ").appendValue(actualMessage);
+        }
+
+        Throwable actualCause = exception.getCause();
+        if (expectedCause != null && !expectedCause.matches(actualCause)) {
+            if (!mismatchDescription.toString().isEmpty()) {
+                mismatchDescription.appendText(" and ");
+            }
+
+            mismatchDescription.appendText("was caused by an exception that ");
+            expectedCause.describeMismatch(actualCause, mismatchDescription);
+            return false;
+        }
+
+        return false;
     }
 }

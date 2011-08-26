@@ -3,6 +3,7 @@ package com.youdevise.testutils.matchers;
 import org.junit.Test;
 
 import static com.youdevise.testutils.matchers.ExceptionMatcher.anExceptionOfType;
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -30,5 +31,29 @@ public final class ExceptionMatcherTest {
     describes_itself_with_everything() {
         assertThat(anExceptionOfType(Exception.class).withTheMessage("OH NO!").causedBy(anExceptionOfType(RuntimeException.class)),
                    is(a_matcher_with_description(equalTo("a <java.lang.Exception> with the message \"OH NO!\" caused by a <java.lang.RuntimeException>"))));
+    }
+
+    @Test public void
+    does_not_match_an_exception_of_a_different_type() {
+        assertThat(anExceptionOfType(IllegalStateException.class),
+                   is(a_matcher_giving_a_mismatch_description_of(new IllegalArgumentException(), equalTo("was a <java.lang.IllegalArgumentException>"))));
+    }
+
+    @Test public void
+    does_not_match_an_exception_with_a_different_message() {
+        assertThat(anExceptionOfType(IllegalStateException.class).withTheMessage("Huh?"),
+                   is(a_matcher_giving_a_mismatch_description_of(new IllegalStateException("What?"), equalTo("had the message \"What?\""))));
+    }
+
+    @Test public void
+    does_not_match_an_exception_with_a_different_cause() {
+        assertThat(anExceptionOfType(IllegalStateException.class).causedBy(anExceptionOfType(UnsupportedOperationException.class)),
+                   is(a_matcher_giving_a_mismatch_description_of(new IllegalStateException(new Exception()), equalTo("was caused by an exception that was a <java.lang.Exception>"))));
+    }
+
+    @Test public void
+    does_not_match_an_exception_with_a_different_message_and_cause() {
+        assertThat(anExceptionOfType(IllegalStateException.class).withTheMessage("Hi!").causedBy(anExceptionOfType(UnsupportedOperationException.class)),
+                   is(a_matcher_giving_a_mismatch_description_of(new IllegalStateException("Hello!", new Exception()), equalTo("had the message \"Hello!\" and was caused by an exception that was a <java.lang.Exception>"))));
     }
 }
