@@ -5,7 +5,7 @@ import com.youdevise.testutils.operations.ActionResult;
 
 import org.junit.Test;
 
-import static com.youdevise.testutils.matchers.ExceptionMatcher.throwsException;
+import static com.youdevise.testutils.matchers.ActionResultExceptionMatcher.throwsException;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
@@ -14,7 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
-public class ExceptionMatcherTest {
+public class ActionResultExceptionMatcherTest {
     @Test public void
     describes_the_exception_it_expects_to_be_thrown() {
          assertThat(throwsException(new Exception()), is(a_matcher_with_description(equalTo("throws the exception <java.lang.Exception>"))));

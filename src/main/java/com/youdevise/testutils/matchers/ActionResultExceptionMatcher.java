@@ -5,15 +5,15 @@ import com.youdevise.testutils.operations.ActionResult;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-public class ExceptionMatcher extends TypeSafeDiagnosingMatcher<ActionResult> {
+public class ActionResultExceptionMatcher extends TypeSafeDiagnosingMatcher<ActionResult> {
     private final Exception exception;
 
-    private ExceptionMatcher(Exception exception) {
+    private ActionResultExceptionMatcher(Exception exception) {
         this.exception = exception;
     }
 
-    public static ExceptionMatcher throwsException(Exception exception) {
-        return new ExceptionMatcher(exception);
+    public static ActionResultExceptionMatcher throwsException(Exception exception) {
+        return new ActionResultExceptionMatcher(exception);
     }
 
     @Override
