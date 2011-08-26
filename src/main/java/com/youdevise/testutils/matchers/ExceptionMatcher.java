@@ -40,28 +40,31 @@ public class ExceptionMatcher extends TypeSafeDiagnosingMatcher<Exception> {
 
     @Override
     protected boolean matchesSafely(Exception exception, Description mismatchDescription) {
+
         Class<? extends Exception> actualExceptionClass = exception.getClass();
         if (!expectedExceptionClass.equals(actualExceptionClass)) {
             mismatchDescription.appendText("was a <").appendText(actualExceptionClass.getName()).appendText(">");
             return false;
         }
 
+        boolean matched = true;
         String actualMessage = exception.getMessage();
         if (expectedMessage != null && !expectedMessage.equals(actualMessage)) {
             mismatchDescription.appendText("had the message ").appendValue(actualMessage);
+            matched = false;
         }
 
         Throwable actualCause = exception.getCause();
         if (expectedCause != null && !expectedCause.matches(actualCause)) {
-            if (!mismatchDescription.toString().isEmpty()) {
+            if (!matched) {
                 mismatchDescription.appendText(" and ");
             }
 
             mismatchDescription.appendText("was caused by an exception that ");
             expectedCause.describeMismatch(actualCause, mismatchDescription);
-            return false;
+            matched = false;
         }
 
-        return false;
+        return matched;
     }
 }

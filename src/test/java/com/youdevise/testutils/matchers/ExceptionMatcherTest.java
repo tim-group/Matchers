@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static com.youdevise.testutils.matchers.ExceptionMatcher.anExceptionOfType;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -55,5 +56,27 @@ public final class ExceptionMatcherTest {
     does_not_match_an_exception_with_a_different_message_and_cause() {
         assertThat(anExceptionOfType(IllegalStateException.class).withTheMessage("Hi!").causedBy(anExceptionOfType(UnsupportedOperationException.class)),
                    is(a_matcher_giving_a_mismatch_description_of(new IllegalStateException("Hello!", new Exception()), equalTo("had the message \"Hello!\" and was caused by an exception that was a <java.lang.Exception>"))));
+    }
+
+    @Test public void
+    matches_an_exception_of_the_same_type() {
+        assertThat(anExceptionOfType(IllegalStateException.class), is(a_matcher_that_matches((new IllegalStateException()))));
+    }
+
+    @Test public void
+    matches_an_exception_of_the_same_type_with_the_same_message() {
+        assertThat(anExceptionOfType(IllegalStateException.class).withTheMessage("Huh?"), is(a_matcher_that_matches(new IllegalStateException("Huh?"))));
+    }
+
+    @Test public void
+    matches_an_exception_of_the_same_type_with_the_same_cause() {
+        assertThat(anExceptionOfType(IllegalStateException.class).causedBy(anExceptionOfType(UnsupportedOperationException.class)),
+                   is(a_matcher_that_matches(new IllegalStateException(new UnsupportedOperationException()))));
+    }
+
+    @Test public void
+    matches_an_exception_of_the_same_type_with_the_same_message_and_cause() {
+        assertThat(anExceptionOfType(IllegalStateException.class).withTheMessage("Hi!").causedBy(anExceptionOfType(UnsupportedOperationException.class)),
+                   is(a_matcher_that_matches(new IllegalStateException("Hi!", new UnsupportedOperationException()))));
     }
 }
