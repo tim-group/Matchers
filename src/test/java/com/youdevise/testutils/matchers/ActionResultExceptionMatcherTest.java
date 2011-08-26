@@ -21,18 +21,18 @@ public class ActionResultExceptionMatcherTest {
     }
 
     @Test public void
-    does_not_match_an_operation_that_does_not_throw_an_exception() {
+    does_not_match_an_action_result_that_does_not_throw_an_exception() {
         assertThat(throwsException(new Exception()), is(a_matcher_giving_a_mismatch_description_of(doNothing(), equalTo("did not throw an exception"))));
     }
 
     @Test public void
-    does_not_match_an_operation_that_throws_a_different_exception() {
+    does_not_match_an_action_result_that_throws_a_different_exception() {
         assertThat(throwsException(new Exception()),
                    is(a_matcher_giving_a_mismatch_description_of(throwException(new Exception()), equalTo("threw the exception <java.lang.Exception>"))));
     }
 
     @Test public void
-    matches_an_operation_that_throws_the_same_exception() {
+    matches_an_action_result_that_throws_the_same_exception() {
         Exception exception = new Exception();
         assertThat(throwsException(exception), is(a_matcher_that_matches(throwException(exception))));
     }
