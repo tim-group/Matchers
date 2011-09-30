@@ -37,7 +37,7 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
         List<Integer> unsatisfied = new ArrayList<Integer>();
         for (int i = 0; i < expected.length; i++) {
             Matcher<T> expectedItem = expected[i];
-            if ( !Matchers.hasItem(expectedItem).matches(actualList) ) {
+            if (!Matchers.hasItem(expectedItem).matches(actualList)) {
                 unsatisfied.add(i);
             }
         }
