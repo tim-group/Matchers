@@ -7,7 +7,7 @@ import org.hamcrest.TypeSafeMatcher;
 
 public class StringContainsSequence extends TypeSafeMatcher<String> {
 
-    protected final String[] substringSequence;
+    private final String[] substringSequence;
 
     protected StringContainsSequence(final String... substringSequence) {
         this.substringSequence = substringSequence;

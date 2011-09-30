@@ -65,7 +65,7 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
             Integer unexpectedIndex = unexpectedIndices.get(0);
             T unexpected = actualList.get(unexpectedIndex);
             mismatchDescription.appendText("\n\t Possible mismatch between: ");
-            mismatchDescription.appendText("unsatisfied <" + (unsatisfiedIndex + 1) + "> and unexpected <" + (unexpectedIndex + 1)+ "> ");
+            mismatchDescription.appendText("unsatisfied <" + (unsatisfiedIndex + 1) + "> and unexpected <" + (unexpectedIndex + 1) + "> ");
             unsatisfied.describeMismatch(unexpected, mismatchDescription);
         }
     }

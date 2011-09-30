@@ -45,7 +45,7 @@ public class ContainsTheItems<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> 
         } 
         boolean first = true;
         for (int i = 0; i < expected.length; i++) {
-            if ( !Matchers.hasItem(expected[i]).matches(actualList) ) {
+            if (!Matchers.hasItem(expected[i]).matches(actualList)) {
                 if (first) {
                     mismatchDescription.appendText("\n\tItems that were expected, but not present: ");
                     first = false;
