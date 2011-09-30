@@ -1,5 +1,6 @@
 package com.youdevise.testutils.matchers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.Description;
@@ -23,27 +24,45 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
         if (actualList.size() != expected.length)  {
             mismatchDescription.appendText(String.format("expected size %d, actual size %d; ", expected.length, actualList.size()));
         }
-        boolean first = true;
-        for (int i = 0; i < expected.length; i++) {
-            if ( !Matchers.hasItem(expected[i]).matches(actualList) ) {
-                if (first) {
-                    mismatchDescription.appendText("\n\tItems that were expected, but not present: ");
-                    first = false;
-                }
-                mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(expected[i]);
-            }
-        }
-        first = true;
-        for (int i = 0; i < actualList.size(); i++) {
-            if ( !Matchers.anyOf(expected).matches(actualList.get(i))) {
-                if (first) {
-                    mismatchDescription.appendText("\n\tUnexpected items: ");
-                    first = false;
-                }
-                mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(actualList.get(i));
-            }
-        }
+
+        List<Integer> unsatisfiedIndices = unsatisfiedIndices(actualList, expected);
+        describeMismatchList(mismatchDescription, "Items that were expected, but not present", expected, unsatisfiedIndices);
+        List<Integer> unexpectedIndices = unexpectedIndices(actualList, expected);
+        describeMismatchList(mismatchDescription, "Unexpected items", actualList.toArray(), unexpectedIndices);
     }
 
+    private List<Integer> unsatisfiedIndices(List<T> actualList, Matcher<T>[] expected) {
+        List<Integer> unsatisfied = new ArrayList<Integer>();
+        for (int i = 0; i < expected.length; i++) {
+            Matcher<T> expectedItem = expected[i];
+            if ( !Matchers.hasItem(expectedItem).matches(actualList) ) {
+                unsatisfied.add(i);
+            }
+        }
+        return unsatisfied;
+    }
+    
+    private List<Integer> unexpectedIndices(List<T> actualList, Matcher<T>[] expected) {
+        List<Integer> unexpected = new ArrayList<Integer>();
+        for (int i = 0; i < actualList.size(); i++) {
+            if (!Matchers.anyOf(expected).matches(actualList.get(i))) {
+                unexpected.add(i);
+            }
+        }
+        return unexpected;
+    }
+
+    private void describeMismatchList(Description mismatchDescription, String title, Object[] items, List<Integer> mismatchIndices) {
+        boolean first = true;
+        for (int i = 0; i < mismatchIndices.size(); i++) {
+            if (first) {
+                mismatchDescription.appendText("\n\t" + title + ": ");
+                first = false;
+            }
+            Integer mismatchIndex = mismatchIndices.get(i);
+            Object mismatchItem = items[mismatchIndex];
+            mismatchDescription.appendText("\n\t  ").appendValue(mismatchIndex + 1).appendText(" ").appendValue(mismatchItem);
+        }
+    }
 
 }

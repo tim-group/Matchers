@@ -124,6 +124,23 @@ public class ContainsInAnyOrderMatcherTest {
     }
 
     @Test public void
+    reports_indices_of_unmatched_matchers_and_unexpected_items() {
+
+        Matcher<Iterable<String>> expected = Contains.inAnyOrder("a", "b", "c", "e", "f");
+        List<String> actual = Arrays.<String>asList("a", "c", "d", "e", "g");
+
+        listOutput(expected, actual);
+
+        assertThat(expected, is(not(a_matcher_that_matches(actual))));
+        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("Unexpected items:"))));
+        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("<3> \"d\""))));
+        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("<5> \"g\""))));
+        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("Items that were expected, but not present:"))));
+        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("<2> <\"b\">"))));
+        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("<5> <\"f\">"))));
+    }
+
+    @Test public void
     test_reports_unexpected_and_missing_items() {
 
         Matcher<Iterable<String>> containsABCD = Contains.inAnyOrder("a", "b", "c", "d");
