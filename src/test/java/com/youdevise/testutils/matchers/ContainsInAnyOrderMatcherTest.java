@@ -4,6 +4,7 @@ package com.youdevise.testutils.matchers;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
+import static com.youdevise.testutils.matchers.StringContainsSequence.containsStringSequence;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -58,8 +59,9 @@ public class ContainsInAnyOrderMatcherTest {
         assertThat(containsOneAndTwo, is(not(a_matcher_that_matches(listOfOne))));
         assertThat(containsOneAndTwo, is(a_matcher_with_description(containsString("[\"a\", \"b\"]"))));
         assertThat(containsOneAndTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOne, containsString("expected size 2, actual size 1"))));
-        assertThat(containsOneAndTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOne, containsString("Items that were expected, but not present"))));
-        assertThat(containsOneAndTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOne, containsString("\"b\""))));
+        assertThat(containsOneAndTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOne, 
+                                                                                    containsStringSequence("Items that were expected, but not present",
+                                                                                                           "\"b\""))));
     }
 
     @Test public void
@@ -73,11 +75,14 @@ public class ContainsInAnyOrderMatcherTest {
         assertThat(contains1234, is(not(a_matcher_that_matches(listOfOne))));
         assertThat(contains1234, is(a_matcher_with_description(containsString("[\"a\", \"b\", \"c\", \"d\"]"))));
         assertThat(contains1234, is(a_matcher_giving_a_mismatch_description_of(listOfOne, containsString("expected size 4, actual size 1"))));
-        assertThat(contains1234, is(a_matcher_giving_a_mismatch_description_of(listOfOne, containsString("Items that were expected, but not present:"))));
-        assertThat(contains1234, is(a_matcher_giving_a_mismatch_description_of(listOfOne, not(containsString("\"a\"")))));
-        assertThat(contains1234, is(a_matcher_giving_a_mismatch_description_of(listOfOne, containsString("\"b\""))));
-        assertThat(contains1234, is(a_matcher_giving_a_mismatch_description_of(listOfOne, containsString("\"c\""))));
-        assertThat(contains1234, is(a_matcher_giving_a_mismatch_description_of(listOfOne, containsString("\"d\""))));
+        assertThat(contains1234, is(a_matcher_giving_a_mismatch_description_of(listOfOne, 
+                                                                               not(containsStringSequence("Items that were expected, but not present:", 
+                                                                                                          "\"a\"")))));
+        assertThat(contains1234, is(a_matcher_giving_a_mismatch_description_of(listOfOne, 
+                                                                               containsStringSequence("Items that were expected, but not present:", 
+                                                                                                      "\"b\"", 
+                                                                                                      "\"c\"",
+                                                                                                      "\"d\""))));
     }
 
 
@@ -92,10 +97,10 @@ public class ContainsInAnyOrderMatcherTest {
         assertThat(containsOne, is(not(a_matcher_that_matches(listOf1234))));
         assertThat(containsOne, is(a_matcher_with_description(containsString("[\"a\"]"))));
         assertThat(containsOne, is(a_matcher_giving_a_mismatch_description_of(listOf1234, containsString("expected size 1, actual size 4"))));
-        assertThat(containsOne, is(a_matcher_giving_a_mismatch_description_of(listOf1234, containsString("Unexpected items:"))));
-        assertThat(containsOne, is(a_matcher_giving_a_mismatch_description_of(listOf1234, containsString("\"b\""))));
-        assertThat(containsOne, is(a_matcher_giving_a_mismatch_description_of(listOf1234, containsString("\"c\""))));
-        assertThat(containsOne, is(a_matcher_giving_a_mismatch_description_of(listOf1234, containsString("\"d\""))));
+        assertThat(containsOne, is(a_matcher_giving_a_mismatch_description_of(listOf1234, containsStringSequence("Unexpected items:",
+                                                                                                                 "\"b\"",
+                                                                                                                 "\"c\"",
+                                                                                                                 "\"d\""))));
     }
 
     @Test public void
@@ -117,10 +122,12 @@ public class ContainsInAnyOrderMatcherTest {
 
         assertThat(containsOneTwo, is(not(a_matcher_that_matches(listOfOneThree))));
         assertThat(containsOneTwo, is(a_matcher_with_description(containsString("[\"a\", \"b\", \"c\"]"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("Unexpected items:"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("\"d\""))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("Items that were expected, but not present:"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, containsString("\"b\""))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, 
+                                                                                 containsStringSequence("Unexpected items:", 
+                                                                                                        "\"d\""))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneThree, 
+                                                                                 containsStringSequence("Items that were expected, but not present:",
+                                                                                                        "\"b\""))));
     }
 
     @Test public void
@@ -132,12 +139,12 @@ public class ContainsInAnyOrderMatcherTest {
         listOutput(expected, actual);
 
         assertThat(expected, is(not(a_matcher_that_matches(actual))));
-        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("Unexpected items:"))));
-        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("<3> \"d\""))));
-        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("<5> \"g\""))));
-        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("Items that were expected, but not present:"))));
-        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("<2> <\"b\">"))));
-        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsString("<5> <\"f\">"))));
+        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsStringSequence("Unexpected items:",
+                                                                                                          "<3> \"d\"",
+                                                                                                          "<5> \"g\""))));
+        assertThat(expected, is(a_matcher_giving_a_mismatch_description_of(actual, containsStringSequence("Items that were expected, but not present:",
+                                                                                                          "<2> <\"b\">",
+                                                                                                          "<5> <\"f\">"))));
     }
 
     @Test public void
@@ -150,10 +157,10 @@ public class ContainsInAnyOrderMatcherTest {
 
         assertThat(containsABCD, is(not(a_matcher_that_matches(listOfACDE))));
         assertThat(containsABCD, is(a_matcher_with_description(containsString("[\"a\", \"b\", \"c\", \"d\"]"))));
-        assertThat(containsABCD, is(a_matcher_giving_a_mismatch_description_of(listOfACDE, containsString("Unexpected items:"))));
-        assertThat(containsABCD, is(a_matcher_giving_a_mismatch_description_of(listOfACDE, containsString("\"e\""))));
-        assertThat(containsABCD, is(a_matcher_giving_a_mismatch_description_of(listOfACDE, containsString("Items that were expected, but not present:"))));
-        assertThat(containsABCD, is(a_matcher_giving_a_mismatch_description_of(listOfACDE, containsString("\"b\""))));
+        assertThat(containsABCD, is(a_matcher_giving_a_mismatch_description_of(listOfACDE, 
+                                                                               containsStringSequence("Unexpected items:", "\"e\""))));
+        assertThat(containsABCD, is(a_matcher_giving_a_mismatch_description_of(listOfACDE, 
+                                                                               containsStringSequence("Items that were expected, but not present:", "\"b\""))));
 
     }
     
@@ -186,10 +193,10 @@ public class ContainsInAnyOrderMatcherTest {
 
         assertThat(containsOneTwo, is(not(a_matcher_that_matches(listOfOneNull))));
         assertThat(containsOneTwo, is(a_matcher_with_description(containsString("[\"a\", \"b\"]"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneNull, containsString("Unexpected items:"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneNull, containsString("null"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneNull, containsString("Items that were expected, but not present:"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneNull, containsString("\"b\""))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneNull, 
+                                                                                 containsStringSequence("Unexpected items:", "null"))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneNull, 
+                                                                                 containsStringSequence("Items that were expected, but not present:", "\"b\""))));
   
     }
     
@@ -202,8 +209,8 @@ public class ContainsInAnyOrderMatcherTest {
 
         assertThat(containsOneTwo, is(not(a_matcher_that_matches(listOfOneTwoNull))));
         assertThat(containsOneTwo, is(a_matcher_with_description(containsString("[\"a\", \"b\"]"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneTwoNull, containsString("Unexpected items:"))));
-        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneTwoNull, containsString("null"))));
+        assertThat(containsOneTwo, is(a_matcher_giving_a_mismatch_description_of(listOfOneTwoNull, 
+                                                                                 containsStringSequence("Unexpected items:", "null"))));
 
     }
     
@@ -225,11 +232,21 @@ public class ContainsInAnyOrderMatcherTest {
 
         assertThat(containsaNull, is(not(a_matcher_that_matches(listOfab))));
         assertThat(containsaNull, is(a_matcher_with_description(containsString("[\"a\", null]"))));
-        assertThat(containsaNull, is(a_matcher_giving_a_mismatch_description_of(listOfab, containsString("Unexpected items:"))));
-        assertThat(containsaNull, is(a_matcher_giving_a_mismatch_description_of(listOfab, containsString("\"b\""))));
-        assertThat(containsaNull, is(a_matcher_giving_a_mismatch_description_of(listOfab, containsString("Items that were expected, but not present:"))));
-        assertThat(containsaNull, is(a_matcher_giving_a_mismatch_description_of(listOfab, containsString("null"))));
+        assertThat(containsaNull, is(a_matcher_giving_a_mismatch_description_of(listOfab, 
+                                                                                containsStringSequence("Unexpected items:", "\"b\""))));
+        assertThat(containsaNull, is(a_matcher_giving_a_mismatch_description_of(listOfab, 
+                                                                                containsStringSequence("Items that were expected, but not present:", "null"))));
 
+    }
+    
+    @Test public void
+    describes_possible_mismatch_when_only_one_unsatisfied_match_and_one_unexpected_item() {
+        Matcher<Iterable<String>> matcher = Contains.inAnyOrder("a", "b");
+        List<String> items = Arrays.<String>asList("b", "c");
+        assertThat(matcher, is(not(a_matcher_that_matches(items))));
+        assertThat(matcher, is(a_matcher_giving_a_mismatch_description_of(items, containsStringSequence("Possible mismatch between:", 
+                                                                                                        "unsatisfied <0> and unexpected <1>",
+                                                                                                        "was \"c\""))));
     }
     
     @SuppressWarnings("unchecked")
@@ -245,7 +262,6 @@ public class ContainsInAnyOrderMatcherTest {
         containsOne.describeTo(description);
         StringDescription mismatchDescription = new StringDescription();
         containsOne.describeMismatch(emptyList, mismatchDescription);
-//        System.out.println("EXPECTED: " + description + " BUT " + mismatchDescription);
     }
-
+    
 }

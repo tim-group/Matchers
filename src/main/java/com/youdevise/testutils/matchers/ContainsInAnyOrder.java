@@ -26,8 +26,10 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
         }
 
         List<Integer> unsatisfiedIndices = unsatisfiedIndices(actualList, expected);
-        describeMismatchList(mismatchDescription, "Items that were expected, but not present", expected, unsatisfiedIndices);
         List<Integer> unexpectedIndices = unexpectedIndices(actualList, expected);
+
+        describeSingleMismatch(mismatchDescription, expected, unsatisfiedIndices, actualList, unexpectedIndices);
+        describeMismatchList(mismatchDescription, "Items that were expected, but not present", expected, unsatisfiedIndices);
         describeMismatchList(mismatchDescription, "Unexpected items", actualList.toArray(), unexpectedIndices);
     }
 
@@ -50,6 +52,22 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
             }
         }
         return unexpected;
+    }
+
+    private void describeSingleMismatch(Description mismatchDescription,
+                                        Matcher<T>[] expected,
+                                        List<Integer> unsatisfiedIndices,
+                                        List<T> actualList,
+                                        List<Integer> unexpectedIndices) {
+        if ((unsatisfiedIndices.size() == 1) && (unexpectedIndices.size() == 1)) {
+            Integer unsatisfiedIndex = unsatisfiedIndices.get(0);
+            Matcher<T> unsatisfied = expected[unsatisfiedIndex];
+            Integer unexpectedIndex = unexpectedIndices.get(0);
+            T unexpected = actualList.get(unexpectedIndex);
+            mismatchDescription.appendText("\n\t Possible mismatch between: ");
+            mismatchDescription.appendText("unsatisfied <" + unsatisfiedIndex + "> and unexpected <" + unexpectedIndex + "> ");
+            unsatisfied.describeMismatch(unexpected, mismatchDescription);
+        }
     }
 
     private void describeMismatchList(Description mismatchDescription, String title, Object[] items, List<Integer> mismatchIndices) {
