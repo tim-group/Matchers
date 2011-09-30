@@ -1,6 +1,5 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hamcrest.Description;
@@ -24,43 +23,27 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
         if (actualList.size() != expected.length)  {
             mismatchDescription.appendText(String.format("expected size %d, actual size %d; ", expected.length, actualList.size()));
         }
-
-        List<Matcher<T>> unsatisfiedMatchers = unsatisfiedMatchers(actualList, expected);
-        describeMismatchList(mismatchDescription, "Items that were expected, but not present", unsatisfiedMatchers);
-        List<T> unexpectedItems = unexpectedItems(actualList, expected);
-        describeMismatchList(mismatchDescription, "Unexpected items", unexpectedItems);
-    }
-
-    private List<Matcher<T>> unsatisfiedMatchers(List<T> actualList, Matcher<T>[] expected) {
-        List<Matcher<T>> unsatisfied = new ArrayList<Matcher<T>>();
-        for (int i = 0; i < expected.length; i++) {
-            Matcher<T> expectedItem = expected[i];
-            if ( !Matchers.hasItem(expectedItem).matches(actualList) ) {
-                unsatisfied.add(expectedItem);
-            }
-        }
-        return unsatisfied;
-    }
-    
-    private List<T> unexpectedItems(List<T> actualList, Matcher<T>[] expected) {
-        List<T> unexpected = new ArrayList<T>();
-        for (T actual : actualList) {
-            if (!Matchers.anyOf(expected).matches(actual)) {
-                unexpected.add(actual);
-            }
-        }
-        return unexpected;
-    }
-
-    private void describeMismatchList(Description mismatchDescription, String title, List<?> unexpectedItems) {
         boolean first = true;
-        for (int i = 0; i < unexpectedItems.size(); i++) {
-            if (first) {
-                mismatchDescription.appendText("\n\t" + title + ": ");
-                first = false;
+        for (int i = 0; i < expected.length; i++) {
+            if ( !Matchers.hasItem(expected[i]).matches(actualList) ) {
+                if (first) {
+                    mismatchDescription.appendText("\n\tItems that were expected, but not present: ");
+                    first = false;
+                }
+                mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(expected[i]);
             }
-            mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(unexpectedItems.get(i));
+        }
+        first = true;
+        for (int i = 0; i < actualList.size(); i++) {
+            if ( !Matchers.anyOf(expected).matches(actualList.get(i))) {
+                if (first) {
+                    mismatchDescription.appendText("\n\tUnexpected items: ");
+                    first = false;
+                }
+                mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(actualList.get(i));
+            }
         }
     }
+
 
 }
