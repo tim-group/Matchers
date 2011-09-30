@@ -245,7 +245,7 @@ public class ContainsInAnyOrderMatcherTest {
         List<String> items = Arrays.<String>asList("b", "c");
         assertThat(matcher, is(not(a_matcher_that_matches(items))));
         assertThat(matcher, is(a_matcher_giving_a_mismatch_description_of(items, containsStringSequence("Possible mismatch between:", 
-                                                                                                        "unsatisfied <1> and unexpected <2>",
+                                                                                                        "unsatisfied expectation <1> and unexpected <2>",
                                                                                                         "was \"c\""))));
     }
     
