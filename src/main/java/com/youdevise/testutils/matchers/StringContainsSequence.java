@@ -26,12 +26,13 @@ public class StringContainsSequence extends TypeSafeMatcher<String> {
         }
         return true;
     }
-    
+
     @Override
     public void describeMismatchSafely(String item, Description mismatchDescription) {
       mismatchDescription.appendText("was \"").appendText(item).appendText("\"");
     }
-    
+
+    @Override
     public void describeTo(Description description) {
         description.appendText("a string contains the sequence of substrings")
                    .appendText(" ")
