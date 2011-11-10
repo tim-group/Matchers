@@ -50,7 +50,7 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
                 }
                 mismatchDescription.appendText("\n\t  ").appendValue(i + 1)
                     .appendText(" Expected (").appendDescriptionOf(expected[i]).appendText(")")
-                    .appendText(" but ");
+                    .appendText("\n but ");
                 expected[i].describeMismatch(actualList.get(i), mismatchDescription);
             }
         }

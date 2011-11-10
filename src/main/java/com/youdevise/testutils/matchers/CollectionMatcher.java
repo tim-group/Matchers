@@ -27,7 +27,7 @@ public abstract class CollectionMatcher<T> extends TypeSafeDiagnosingMatcher<Ite
     protected boolean matchesSafely(Iterable<T> actual, Description mismatchDescription) {
         List<T> actualList = listOf(actual);
         diagnoseFailures(actual, mismatchDescription, expected);
-        mismatchDescription.appendText("\n\tComplete actual iterable: ").appendValue(actualList);
+        mismatchDescription.appendText("\n\n\tComplete actual iterable: ").appendValue(actualList);
         return contains.matches(actual);
     }
 
