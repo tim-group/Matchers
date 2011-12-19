@@ -162,7 +162,7 @@ public class MagicJavaBeanMatcherTest {
            return magicMatcher.getProxy(MatcherBuilder.class).with_the_name(name);
        }
 
-       public static interface MatcherBuilder extends Matcher<Bean> {
+       public interface MatcherBuilder extends Matcher<Bean> {
            MatcherBuilder with_the_name(String name);
            MatcherBuilder with_the_name(Matcher<? super String> nameMatcher);
            MatcherBuilder with_a_first_name_of(String firstName);
