@@ -25,20 +25,20 @@ public abstract class CollectionMatcher<T> extends TypeSafeDiagnosingMatcher<Ite
 
     @Override
     protected boolean matchesSafely(Iterable<T> actual, Description mismatchDescription) {
-        List<T> actualList = listOf(actual);
+        final List<T> actualList = listOf(actual);
         diagnoseFailures(actual, mismatchDescription, expected);
         mismatchDescription.appendText("\n\n\tComplete actual iterable: ").appendValue(actualList);
         return contains.matches(actual);
     }
 
     protected final List<T> listOf(Iterable<T> actual) {
-        List<T> actualList = new ArrayList<T>();
-        for (T t : actual) {
+        final List<T> actualList = new ArrayList<T>();
+        for (final T t : actual) {
             actualList.add(t);
         }
         return actualList;
     }
-    
+
     protected final boolean actualCollectionIsEmpty(Description mismatchDescription, List<T> actualList) {
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
@@ -47,6 +47,5 @@ public abstract class CollectionMatcher<T> extends TypeSafeDiagnosingMatcher<Ite
         return false;
     }
 
-    protected abstract void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, Matcher<T>[] expected);
-
+    protected abstract void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, Matcher<T>[] expectedMatcher);
 }

@@ -40,14 +40,12 @@ public class MagicJavaBeanMatcher<T> implements InvocationHandler {
 
     @SuppressWarnings("unchecked")
     public <I> I getProxy(Class<I> iface) {
-        return (I) Proxy.newProxyInstance(iface.getClassLoader(),
-                                      new Class<?>[] { iface },
-                                      this);
+        return (I) Proxy.newProxyInstance(iface.getClassLoader(), new Class<?>[] {iface}, this);
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.getName().equals("equals")) {
+        if ("equals".equals(method.getName())) {
             return proxy == args[0];
         }
 
@@ -58,7 +56,7 @@ public class MagicJavaBeanMatcher<T> implements InvocationHandler {
         applyMatch(method, args);
 
         final Class<?> returnType = method.getReturnType();
-        return Proxy.newProxyInstance(returnType.getClassLoader(), new Class<?>[] { returnType }, this);
+        return Proxy.newProxyInstance(returnType.getClassLoader(), new Class<?>[] {returnType}, this);
     }
 
     public void applyMatch(Method method, Object[] args) throws InstantiationException, IllegalAccessException {
@@ -104,15 +102,15 @@ public class MagicJavaBeanMatcher<T> implements InvocationHandler {
         };
     }
 
-    private static final Function<java.util.regex.Matcher, Optional<String>> TO_FIRST_MATCH = new Function<java.util.regex.Matcher, Optional<String>>() {
-        @Override
-        public Optional<String> apply(java.util.regex.Matcher matcher) {
-            if (!matcher.matches()) {
-                return Optional.absent();
+    private static final Function<java.util.regex.Matcher, Optional<String>> TO_FIRST_MATCH
+        = new Function<java.util.regex.Matcher, Optional<String>>() {
+            @Override public Optional<String> apply(java.util.regex.Matcher matcher) {
+                if (!matcher.matches()) {
+                    return Optional.absent();
+                }
+                return Optional.of(matcher.group(1));
             }
-            return Optional.of(matcher.group(1));
-        }
-    };
+        };
 
     private String getPropertyNameFromMethod(Method method) {
         if (method.isAnnotationPresent(AddressesProperty.class)) {

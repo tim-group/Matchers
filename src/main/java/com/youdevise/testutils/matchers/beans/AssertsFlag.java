@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AssertsFlag {
-    public String name();
-    public boolean expected();
+    String name();
+    boolean expected();
 }

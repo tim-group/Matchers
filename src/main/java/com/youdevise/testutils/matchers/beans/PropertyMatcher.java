@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.beans.PropertyUtil.getPropertyDescriptor;
 
 public final class PropertyMatcher extends TypeSafeDiagnosingMatcher<Object> {
-    
+
     private final String propertyName;
     private final Matcher<?> valueMatcher;
 
@@ -27,22 +27,23 @@ public final class PropertyMatcher extends TypeSafeDiagnosingMatcher<Object> {
     public static PropertyMatcher an_object_whose(String propertyName, Matcher<?> valueMatcher) {
         return new PropertyMatcher(propertyName, valueMatcher);
     }
-    
+
     public static PropertyMatcherFactory an_object_whose(String propertyName) {
         return new PropertyMatcherFactory(propertyName);
     }
-    
+
     public static final class PropertyMatcherFactory {
         private final String targetPropertyName;
+
         private PropertyMatcherFactory(String propertyName) {
             targetPropertyName = propertyName;
         }
-        
+
         public PropertyMatcher is(Matcher<?> valueMatcher) {
             return new PropertyMatcher(targetPropertyName, Matchers.is(valueMatcher));
         }
     }
-    
+
     private PropertyMatcher(String propertyName, Matcher<?> valueMatcher) {
         this.propertyName = propertyName;
         this.valueMatcher = valueMatcher;
@@ -52,24 +53,24 @@ public final class PropertyMatcher extends TypeSafeDiagnosingMatcher<Object> {
     public void describeTo(Description description) {
         description.appendText("whose ").appendText(propertyName).appendText(" ").appendDescriptionOf(valueMatcher);
     }
-    
+
     @Override
     protected boolean matchesSafely(Object item, Description mismatchDescription) {
-        PropertyDescriptor descriptor = getPropertyDescriptor(propertyName, item);
+        final PropertyDescriptor descriptor = getPropertyDescriptor(propertyName, item);
         if (null == descriptor) {
             return matchOnPublicField(item, mismatchDescription);
         }
-        
-        Method readMethod = descriptor.getReadMethod();
+
+        final Method readMethod = descriptor.getReadMethod();
         if (null == readMethod) {
             mismatchDescription.appendText("with no getter method for the ").appendValue(propertyName).appendText(" property");
             return false;
         }
-        
+
         Object actualValue = null;
         try {
             actualValue = readMethod.invoke(item);
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             mismatchDescription
                 .appendText("whose ")
                 .appendValue(propertyName)
@@ -77,30 +78,30 @@ public final class PropertyMatcher extends TypeSafeDiagnosingMatcher<Object> {
                 .appendValue(exception.getCause() == null ? exception : exception.getCause());
             return false;
         }
-        
+
         return matchOnValue(mismatchDescription, actualValue);
     }
 
     private boolean matchOnValue(Description mismatchDescription, Object actualValue) {
         mismatchDescription.appendText("whose ").appendText(propertyName).appendText(" ");
-        
-        boolean matches = valueMatcher.matches(actualValue);
+
+        final boolean matches = valueMatcher.matches(actualValue);
         if (!matches) {
             valueMatcher.describeMismatch(actualValue, mismatchDescription);
         }
-        
+
         return matches;
     }
 
     private boolean matchOnPublicField(Object item, Description mismatchDescription) {
-        Field field = getField(item, mismatchDescription);
+        final Field field = getField(item, mismatchDescription);
         if (field == null) {
             return false;
         }
         Object value = null;
         try {
             value = getValue(item, field);
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             mismatchDescription
                 .appendText("whose ")
                 .appendValue(propertyName)
@@ -110,16 +111,16 @@ public final class PropertyMatcher extends TypeSafeDiagnosingMatcher<Object> {
         }
         return matchOnValue(mismatchDescription, value);
     }
-    
+
     private Field getField(Object item, Description mismatchDescription) {
         try {
             return findField(item.getClass());
-        } catch (NoSuchFieldException exception) {
+        } catch (final NoSuchFieldException exception) {
             mismatchDescription
             .appendText("with no public property or field named ")
             .appendValue(propertyName);
             return null;
-        } catch (SecurityException exception) {
+        } catch (final SecurityException exception) {
             mismatchDescription
                 .appendText("which could not be reflected upon to find  ")
                 .appendValue(propertyName)
@@ -133,10 +134,10 @@ public final class PropertyMatcher extends TypeSafeDiagnosingMatcher<Object> {
         if (clazz == Object.class) {
             throw new NoSuchFieldException();
         }
-        
+
         try {
             return clazz.getDeclaredField(propertyName);
-        } catch (NoSuchFieldException e) {
+        } catch (final NoSuchFieldException e) {
             return findField(clazz.getSuperclass());
         }
     }
