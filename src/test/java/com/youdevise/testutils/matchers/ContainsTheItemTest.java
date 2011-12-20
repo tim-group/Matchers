@@ -14,7 +14,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
 
-public class ContainsTheItemMatcherTest {
+public class ContainsTheItemTest {
     
     @Test public void
     reports_reason_why_each_actual_item_does_not_match_the_expectation() {

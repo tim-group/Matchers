@@ -19,7 +19,7 @@ import org.hamcrest.StringDescription;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Test;
 
-public class ContainsInOrderMatcherTest {
+public class ContainsInOrderTest {
 
     @Test public void
     reports_when_the_actual_collection_is_empty() {

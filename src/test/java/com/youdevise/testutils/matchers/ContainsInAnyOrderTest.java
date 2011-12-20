@@ -18,7 +18,7 @@ import org.hamcrest.Matchers;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
 
-public class ContainsInAnyOrderMatcherTest {
+public class ContainsInAnyOrderTest {
 
     @Test public void
     reports_when_the_actual_collection_is_empty() {
