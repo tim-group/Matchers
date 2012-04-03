@@ -1,4 +1,4 @@
-package com.youdevise.hip.testutils.matchers.core;
+package com.youdevise.testutils.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
@@ -8,8 +8,8 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 public final class MatcherMatcher<T> extends TypeSafeDiagnosingMatcher<Matcher<T>> {
 
-    private enum MatchType {HAS_DESCRIPTION, MATCHES, MISMATCHES}
-    
+    private enum MatchType { HAS_DESCRIPTION, MATCHES, MISMATCHES }
+
     private final MatchType type;
     private final T target;
     private final Matcher<?> mismatchDescriptionMatcher;
@@ -22,22 +22,27 @@ public final class MatcherMatcher<T> extends TypeSafeDiagnosingMatcher<Matcher<T
         this.mismatchDescriptionMatcher = mismatchDescription;
     }
 
+    // CHECKSTYLE_OFF: Name
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Factory
     public static Matcher<Object> a_matcher_with_description(Matcher<? super String> description) {
         return new MatcherMatcher(MatchType.HAS_DESCRIPTION, null, description, null);
     }
-    
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Factory
-    public static <X> MatcherMatcher<X> a_matcher_that_matches(X matchedItem) {
-        return new MatcherMatcher<X>(MatchType.MATCHES, matchedItem, null, null);
+    public static Matcher<Object> a_matcher_that_matches(Object matchedItem) {
+        return new MatcherMatcher(MatchType.MATCHES, matchedItem, null, null);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Factory
-    public static <X> MatcherMatcher<X> a_matcher_giving_a_mismatch_description_of(X mismatchingItem, Matcher<? super String> mismatchDescription) {
-        return new MatcherMatcher<X>(MatchType.MISMATCHES, mismatchingItem, null, mismatchDescription);
+    public static Matcher<Object> a_matcher_giving_a_mismatch_description_of(Object mismatchingItem,
+                                                                             Matcher<? super String> mismatchDescription)
+    {
+        return new MatcherMatcher(MatchType.MISMATCHES, mismatchingItem, null, mismatchDescription);
     }
-    
+
     @Override
     public void describeTo(Description description) {
         description.appendText("a Matcher ");
@@ -57,10 +62,11 @@ public final class MatcherMatcher<T> extends TypeSafeDiagnosingMatcher<Matcher<T
         }
     }
 
+    // CHECKSTYLE_OFF: ReturnCount
     @Override
     protected boolean matchesSafely(Matcher<T> item, Description mismatchDescription) {
         mismatchDescription.appendText("was a Matcher ");
-        
+
         if (MatchType.HAS_DESCRIPTION.equals(type)) {
             final String desc = matcherDescriptionOf(item);
             if (descriptionMatcher.matches(desc)) {
@@ -70,7 +76,7 @@ public final class MatcherMatcher<T> extends TypeSafeDiagnosingMatcher<Matcher<T
             descriptionMatcher.describeMismatch(desc, mismatchDescription);
             return false;
         }
-        
+
         if (MatchType.MATCHES.equals(type)) {
             if (item.matches(target)) {
                 return true;
@@ -84,12 +90,12 @@ public final class MatcherMatcher<T> extends TypeSafeDiagnosingMatcher<Matcher<T
             mismatchDescription.appendText("that matched.");
             return false;
         }
-        
+
         final String mismatchDesc = mismatchDescriptionOf(item, target);
         if (mismatchDescriptionMatcher.matches(mismatchDesc)) {
             return true;
         }
-        
+
         mismatchDescription.appendText("whose mismatch description ");
         mismatchDescriptionMatcher.describeMismatch(mismatchDesc, mismatchDescription);
         return false;
@@ -106,5 +112,5 @@ public final class MatcherMatcher<T> extends TypeSafeDiagnosingMatcher<Matcher<T
         matcher.describeMismatch(value, description);
         return description.toString();
     }
-    
+
 }

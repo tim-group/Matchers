@@ -1,4 +1,4 @@
-package com.youdevise.hip.testutils.matchers.core;
+package com.youdevise.testutils.matchers;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
