@@ -1,18 +1,19 @@
 package com.youdevise.testutils.matchers;
 
 
-import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-
 import java.util.Arrays;
 import java.util.List;
 
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 
 public class ContainsTheItemTest {
     

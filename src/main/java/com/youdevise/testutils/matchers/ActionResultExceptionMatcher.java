@@ -1,10 +1,10 @@
 package com.youdevise.testutils.matchers;
 
-import com.youdevise.testutils.operations.ActionResult;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+
+import com.youdevise.testutils.operations.ActionResult;
 
 public class ActionResultExceptionMatcher extends TypeSafeDiagnosingMatcher<ActionResult> {
     private final Matcher<? super Exception> exceptionMatcher;

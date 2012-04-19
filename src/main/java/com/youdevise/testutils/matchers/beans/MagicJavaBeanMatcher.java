@@ -13,11 +13,13 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
+import static java.util.Arrays.asList;
+
+import static org.hamcrest.Matchers.equalTo;
+
 import static com.google.common.base.Functions.compose;
 import static com.google.common.collect.Iterables.find;
 import static com.google.common.collect.Iterables.transform;
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.equalTo;
 
 public class MagicJavaBeanMatcher<T> implements InvocationHandler {
     private final JavaBeanMatcher<T> baseMatcher;

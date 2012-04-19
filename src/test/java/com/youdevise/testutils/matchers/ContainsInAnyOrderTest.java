@@ -1,15 +1,6 @@
 package com.youdevise.testutils.matchers;
 
 
-import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
-import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
-import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
-import static com.youdevise.testutils.matchers.StringContainsSequence.containsStringSequence;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +8,16 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
+import static com.youdevise.testutils.matchers.StringContainsSequence.containsStringSequence;
 
 public class ContainsInAnyOrderTest {
 

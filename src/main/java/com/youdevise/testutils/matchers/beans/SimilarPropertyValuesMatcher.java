@@ -1,9 +1,5 @@
 package com.youdevise.testutils.matchers.beans;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Sets;
-import com.youdevise.testutils.matchers.beans.PropertyMatcher;
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -17,12 +13,17 @@ import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import static com.google.common.collect.Iterables.filter;
-import static com.youdevise.testutils.matchers.beans.PropertyMatcher.an_object_whose;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Sets;
+
 import static java.util.Arrays.asList;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.beans.PropertyUtil.NO_ARGUMENTS;
 import static org.hamcrest.beans.PropertyUtil.propertyDescriptorsFor;
+
+import static com.google.common.collect.Iterables.filter;
+import static com.youdevise.testutils.matchers.beans.PropertyMatcher.an_object_whose;
 
 public class SimilarPropertyValuesMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
 

@@ -19,9 +19,11 @@ import org.junit.Test;
 import com.youdevise.testutils.matchers.Contains;
 import com.youdevise.testutils.matchers.MatcherMatcher;
 
-import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static java.util.Calendar.YEAR;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 
 public class MagicJavaBeanMatcherTest {
     private TimeZone originalJavaTimeZone;

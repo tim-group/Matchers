@@ -9,10 +9,11 @@ import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
-import static com.youdevise.testutils.matchers.beans.PropertyMatcher.an_object_with_property;
-
 import static java.util.Arrays.asList;
+
 import static org.hamcrest.Matchers.allOf;
+
+import static com.youdevise.testutils.matchers.beans.PropertyMatcher.an_object_with_property;
 
 public abstract class BaseJavaBeanMatcher<T> extends BaseMatcher<T> {
 

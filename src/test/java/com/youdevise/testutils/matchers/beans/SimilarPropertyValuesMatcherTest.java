@@ -5,14 +5,15 @@ import java.util.List;
 
 import org.junit.Test;
 
-import static com.youdevise.testutils.matchers.beans.SimilarPropertyValuesMatcher.similar_properties_as;
-import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
-import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
-import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
+import static com.youdevise.testutils.matchers.beans.SimilarPropertyValuesMatcher.similar_properties_as;
 
 public class SimilarPropertyValuesMatcherTest {
     

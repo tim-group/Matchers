@@ -1,9 +1,13 @@
 package com.youdevise.testutils.matchers;
 
+import org.junit.Test;
+
 import com.youdevise.testutils.operations.Action;
 import com.youdevise.testutils.operations.ActionResult;
 
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 import static com.youdevise.testutils.matchers.ActionResultExceptionMatcher.throwsException;
 import static com.youdevise.testutils.matchers.ExceptionMatcher.anExceptionOfType;
@@ -11,9 +15,6 @@ import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
 import static com.youdevise.testutils.operations.ActionRunner.running;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
 public class ActionResultExceptionMatcherTest {
     @Test public void
