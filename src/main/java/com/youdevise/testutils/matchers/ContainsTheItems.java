@@ -9,13 +9,15 @@ import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 public class ContainsTheItems<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
-    
+
     private final Matcher<Iterable<T>> contains;
-    private final Matcher<T>[] expected;
-    
-    public ContainsTheItems(Matcher<T>[] expected) {
+    private final List<Matcher<? super T>> expected;
+
+    public ContainsTheItems(List<Matcher<? super T>> expected) {
         this.expected = expected;
-        contains = Matchers.<T>hasItems(expected);
+        @SuppressWarnings("unchecked")
+        Matcher<? super T>[] expectedArray = (Matcher<? super T>[]) expected.toArray();
+        contains = Matchers.<T>hasItems(expectedArray);
     }
 
     @Override
@@ -42,15 +44,15 @@ public class ContainsTheItems<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> 
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
             return;
-        } 
+        }
         boolean first = true;
-        for (int i = 0; i < expected.length; i++) {
-            if (!Matchers.hasItem(expected[i]).matches(actualList)) {
+        for (int i = 0; i < expected.size(); i++) {
+            if (!Matchers.hasItem(expected.get(i)).matches(actualList)) {
                 if (first) {
                     mismatchDescription.appendText("\n\tItems that were expected, but not present: ");
                     first = false;
                 }
-                mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(expected[i]);
+                mismatchDescription.appendText("\n\t  ").appendValue(i + 1).appendText(" ").appendValue(expected.get(i));
             }
         }
     }

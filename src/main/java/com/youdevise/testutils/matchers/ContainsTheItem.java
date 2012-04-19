@@ -9,11 +9,10 @@ import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 public class ContainsTheItem<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
-    
     private final Matcher<Iterable<? super T>> contains;
-    private final Matcher<T> expected;
-    
-    public ContainsTheItem(Matcher<T> expected) {
+    private final Matcher<? super T> expected;
+
+    public ContainsTheItem(Matcher<? super T> expected) {
         this.expected = expected;
         contains = Matchers.<T>hasItem(expected);
     }
@@ -42,7 +41,7 @@ public class ContainsTheItem<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
             return;
-        } 
+        }
         int i = 0;
         for (T actualItem : actualList) {
             mismatchDescription.appendText("\n\t  ").appendValue(++i).appendText(" ");

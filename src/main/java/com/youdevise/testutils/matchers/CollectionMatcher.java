@@ -10,10 +10,10 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 public abstract class CollectionMatcher<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
 
     private final Matcher<Iterable<T>> contains;
-    private final Matcher<T>[] expected;
+    private final List<Matcher<? super T>> expected;
 
 
-    public CollectionMatcher(Matcher<T>[] expected, Matcher<Iterable<T>> contains) {
+    public CollectionMatcher(List<Matcher<? super T>> expected, Matcher<Iterable<T>> contains) {
         this.expected = expected;
         this.contains = contains;
     }
@@ -47,5 +47,5 @@ public abstract class CollectionMatcher<T> extends TypeSafeDiagnosingMatcher<Ite
         return false;
     }
 
-    protected abstract void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, Matcher<T>[] expectedMatcher);
+    protected abstract void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, List<Matcher<? super T>> expectedMatcher);
 }
