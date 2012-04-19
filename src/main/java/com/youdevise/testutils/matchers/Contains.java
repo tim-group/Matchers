@@ -20,8 +20,8 @@ public class Contains {
         return inOrder(expectedMatchers);
     }
 
-    public static <T> Matcher<Iterable<T>> inOrder(final Matcher<? super T>... expected) {
-        return inOrder(Arrays.asList(expected));
+    public static <T> Matcher<Iterable<T>> inOrder(final Matcher<T>... expected) {
+        return inOrder(Arrays.asList((Matcher<? super T>[]) expected));
     }
 
     public static <T> Matcher<Iterable<T>> inOrder(final Iterable<Matcher<? super T>> expected) {
@@ -38,7 +38,7 @@ public class Contains {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Matcher<Iterable<T>> only(final Matcher<? super T> expected) {
+    public static <T> Matcher<Iterable<T>> only(final Matcher<T> expected) {
         return inOrder(expected);
     }
 
@@ -50,8 +50,8 @@ public class Contains {
         return inAnyOrder(expectedMatchers);
     }
 
-    public static <T> Matcher<Iterable<T>> inAnyOrder(final Matcher<? super T>... expected) {
-        return inAnyOrder(Arrays.asList(expected));
+    public static <T> Matcher<Iterable<T>> inAnyOrder(final Matcher<T>... expected) {
+        return inAnyOrder(Arrays.asList((Matcher<? super T>[]) expected));
     }
 
     public static <T> Matcher<Iterable<T>> inAnyOrder(final Iterable<Matcher<? super T>> expected) {
@@ -70,8 +70,8 @@ public class Contains {
         return theItems(expectedMatchers);
     }
 
-    public static <T> Matcher<Iterable<T>> theItems(final Matcher<? super T>... expected) {
-        return theItems(Arrays.asList(expected));
+    public static <T> Matcher<Iterable<T>> theItems(final Matcher<T>... expected) {
+        return theItems(Arrays.asList((Matcher<? super T>[]) expected));
     }
 
     public static <T> Matcher<Iterable<T>> theItems(final Iterable<Matcher<? super T>> expected) {
