@@ -8,6 +8,8 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
+import com.google.common.collect.Iterables;
+
 public class ContainsTheItems<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
 
     private final Matcher<Iterable<T>> contains;
@@ -16,7 +18,7 @@ public class ContainsTheItems<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> 
     public ContainsTheItems(List<Matcher<? super T>> expected) {
         this.expected = expected;
         @SuppressWarnings("unchecked")
-        Matcher<? super T>[] expectedArray = (Matcher<? super T>[]) expected.toArray();
+        Matcher<? super T>[] expectedArray = Iterables.toArray(expected, Matcher.class);
         contains = Matchers.<T>hasItems(expectedArray);
     }
 
