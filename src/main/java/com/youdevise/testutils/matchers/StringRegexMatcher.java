@@ -20,12 +20,12 @@ public final class StringRegexMatcher extends TypeSafeDiagnosingMatcher<String> 
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("a string matching " + pattern);
+        description.appendText("matches ").appendValue(pattern);
     }
 
     @Override
     protected boolean matchesSafely(String item, Description mismatchDescription) {
-        mismatchDescription.appendText("was " + item);
-        return Pattern.compile(".*" + pattern + ".*", Pattern.DOTALL).matcher(item).matches();
+        mismatchDescription.appendText("was ").appendValue(item);
+        return Pattern.compile(pattern, Pattern.DOTALL).matcher(item).find();
     }
 }
