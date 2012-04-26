@@ -1,5 +1,7 @@
 package com.youdevise.testutils.matchers;
 
+import java.util.regex.Pattern;
+
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -50,5 +52,15 @@ public class StringRegexMatcherTest {
     @Test public void
     matches_a_character_set() {
         assertThat(matchesRegex("he[yt] [ft]here"), is(a_matcher_that_matches("hey there")));
+    }
+
+    @Test public void
+    allows_the_user_to_provide_flags() {
+        assertThat(matchesRegex("^line 2").using(Pattern.MULTILINE), is(a_matcher_that_matches("line 1\nline 2")));
+    }
+
+    @Test public void
+    allows_the_user_to_provide_multiple_flags() {
+        assertThat(matchesRegex("^lIne 2$").using(Pattern.MULTILINE).using(Pattern.CASE_INSENSITIVE), is(a_matcher_that_matches("line 1\nline 2\nline3")));
     }
 }

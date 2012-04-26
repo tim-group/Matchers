@@ -8,6 +8,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 public final class StringRegexMatcher extends TypeSafeDiagnosingMatcher<String> {
     private final String pattern;
+    private int flag = 0;
 
     private StringRegexMatcher(String pattern) {
         this.pattern = pattern;
@@ -18,6 +19,11 @@ public final class StringRegexMatcher extends TypeSafeDiagnosingMatcher<String> 
         return new StringRegexMatcher(pattern);
     }
 
+    public StringRegexMatcher using(int flag) {
+        this.flag |= flag;
+        return this;
+    }
+
     @Override
     public void describeTo(Description description) {
         description.appendText("matches ").appendValue(pattern);
@@ -26,6 +32,6 @@ public final class StringRegexMatcher extends TypeSafeDiagnosingMatcher<String> 
     @Override
     protected boolean matchesSafely(String item, Description mismatchDescription) {
         mismatchDescription.appendText("was ").appendValue(item);
-        return Pattern.compile(pattern, Pattern.DOTALL).matcher(item).find();
+        return Pattern.compile(pattern, flag).matcher(item).find();
     }
 }
