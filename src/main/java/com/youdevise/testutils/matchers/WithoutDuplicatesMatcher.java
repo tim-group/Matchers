@@ -19,7 +19,7 @@ public class WithoutDuplicatesMatcher<T> extends TypeSafeDiagnosingMatcher<Itera
 
     @Override
     protected boolean matchesSafely(Iterable<T> item, Description mismatchDescription) {
-        if (Iterables.size(item)==Sets.newHashSet(item).size()) {
+        if (Iterables.size(item) == Sets.newHashSet(item).size()) {
             return true;
         }
         mismatchDescription.appendText("contained duplicates");

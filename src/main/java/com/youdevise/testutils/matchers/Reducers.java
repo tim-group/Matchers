@@ -10,7 +10,7 @@ public final class Reducers {
     public static <A, B> B reduce(Iterable<A> iterable, Reducer<A, B> reducer) {
         B result = reducer.identity();
         Iterator<A> iterator = iterable.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             result = reducer.product(iterator.next(), result);
         }
         return result;
