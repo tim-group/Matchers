@@ -3,6 +3,7 @@ package com.youdevise.testutils.matchers;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.StringDescription;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
@@ -22,6 +23,12 @@ public final class MatcherMatcher<T> extends TypeSafeDiagnosingMatcher<Matcher<T
         this.mismatchDescriptionMatcher = mismatchDescription;
     }
 
+    // CHECKSTYLE_OFF: Name
+    @Factory
+    public static Matcher<Object> a_matcher_with_description(String description) {
+        return a_matcher_with_description(Matchers.equalTo(description));
+    }
+    
     // CHECKSTYLE_OFF: Name
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Factory
