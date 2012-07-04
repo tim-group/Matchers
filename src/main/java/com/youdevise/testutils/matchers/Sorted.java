@@ -61,5 +61,4 @@ public class Sorted<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
         mismatchDescription.appendText("was not in order");
         return false;
     }
-    
 }

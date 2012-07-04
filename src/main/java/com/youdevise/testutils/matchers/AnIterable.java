@@ -49,14 +49,12 @@ public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? super T>
         return new AnIterableWhich<T>(this, new IsEmptyMatcher<T>());
     }
 
-    @SuppressWarnings({ "unchecked" })
     public AnIterableWhich<T> inAscendingOrder() {
-        return new AnIterableWhich<T>(this, (Sorted<T>) Sorted.inAscendingOrder());
+        return new AnIterableWhich<T>(this, Sorted.with(getNaturalOrdering()));
     }
     
-    @SuppressWarnings({ "unchecked" })
     public AnIterableWhich<T> inDescendingOrder() {
-        return new AnIterableWhich<T>(this, (Sorted<T>) Sorted.inDescendingOrder());
+        return new AnIterableWhich<T>(this, Sorted.with(getNaturalOrdering().reverse()));
     }
     
     public AnIterableWhich<T> inSortedOrder(Comparator<T> comparator) {
@@ -66,5 +64,18 @@ public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? super T>
     public AnIterableWhich<T> inSortedOrder(Ordering<T> ordering) {
         return new AnIterableWhich<T>(this, Sorted.with(ordering));
     }
-
+    
+    private Ordering<T> getNaturalOrdering() {
+        if (!Comparable.class.isAssignableFrom(klass)) {
+            throw new UnsupportedOperationException(String.format("No natural comparable for %s", klass));
+        }
+        Comparator<T> comparator = new Comparator<T>() {
+            @Override public int compare(T o1, T o2) {
+                @SuppressWarnings("unchecked")
+                Comparable<T> c1 = (Comparable<T>) o1;
+                return c1.compareTo(o2);
+            }
+        };
+        return Ordering.from(comparator);
+    }
 }
