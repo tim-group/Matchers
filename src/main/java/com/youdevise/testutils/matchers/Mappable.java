@@ -33,18 +33,18 @@ public class Mappable<A, B> extends TypeSafeDiagnosingMatcher<Iterable<A>> {
         }
         
         public Mappable<A, B> to(Matcher<? super Iterable<B>> mappedIterableMatcher) {
-            return new Mappable<A, B>(mappedIterableMatcher, mapper);
+            return new Mappable<A, B>(mapper, mappedIterableMatcher);
         }
     }
     
-    private final Matcher<? super Iterable<B>> mappedIterableMatcher;
     private final Function<A, B> mapper;
+    private final Matcher<? super Iterable<B>> mappedIterableMatcher;
 
-    private Mappable(Matcher<? super Iterable<B>> mappedIterableMatcher, Function<A, B> mapper) {
-        this.mappedIterableMatcher = mappedIterableMatcher;
+    public Mappable(Function<A, B> mapper, Matcher<? super Iterable<B>> mappedIterableMatcher) {
         this.mapper = mapper;
+        this.mappedIterableMatcher = mappedIterableMatcher;
     }
-    
+        
     @Override
     public void describeTo(Description description) {
         description.appendText("an iterable which maps to ").appendDescriptionOf(mappedIterableMatcher);

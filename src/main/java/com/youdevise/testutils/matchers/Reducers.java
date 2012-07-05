@@ -2,8 +2,6 @@ package com.youdevise.testutils.matchers;
 
 import java.util.Iterator;
 
-
-
 public final class Reducers {
     private Reducers() {}
     
@@ -17,7 +15,7 @@ public final class Reducers {
     }
     
     public static Reducer<Integer, Integer> sumIntegers() {
-        return new Reducer<Integer, Integer>() {
+        return new EndoReducer<Integer>() {
             @Override public Integer identity() {
                 return 0;
             }
@@ -29,7 +27,7 @@ public final class Reducers {
     }
     
     public static Reducer<String, String> joinStrings(final String separator) {
-        return new Reducer<String, String>() {
+        return new EndoReducer<String>() {
             @Override public String identity() {
                 return "";
             }

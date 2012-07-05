@@ -30,7 +30,7 @@ public class Reducible<A, B> extends TypeSafeDiagnosingMatcher<Iterable<A>> {
     private final Reducer<A, B> reducer;
     private final Matcher<? super B> totalMatcher;
 
-    private Reducible(Reducer<A, B> reducer, Matcher<? super B> totalMatcher) {
+    public Reducible(Reducer<A, B> reducer, Matcher<? super B> totalMatcher) {
         this.reducer = reducer;
         this.totalMatcher = totalMatcher;
     }
