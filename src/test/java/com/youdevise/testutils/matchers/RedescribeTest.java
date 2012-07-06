@@ -2,7 +2,6 @@ package com.youdevise.testutils.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -63,7 +62,7 @@ public class RedescribeTest {
             }
         };
         
-        Matcher<? super Iterable<Integer>> containsNoNegativeNumbers = Redescribe.theMatcher(EveryItem.matching(Matchers.greaterThanOrEqualTo(0)))
+        Matcher<? super Iterable<Integer>> containsNoNegativeNumbers = Redescribe.theMatcher(EveryItem.matching(greaterThanOrEqualTo(0)))
                                                                          .as("a collection of positive numbers")
                                                                          .describingMismatchWith(negativeNumberMismatchDescriber);
         

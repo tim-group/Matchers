@@ -27,7 +27,7 @@ The mismatch description for <code>Matchers.hasItem("a")</code> is not especiall
 Generics issues
 ---------------
 
-The <code>Contains</code> family of matchers are less generous than the hamcrest collection matchers in their generic wildcarding. This is to avoid a common situation where the Eclipse Java compiler would accept an expression that the stanard javac compiler would reject.
+The <code>Contains</code> family of matchers are less generous than the hamcrest collection matchers in their generic wildcarding. This is to avoid a common situation where the Eclipse Java compiler would accept an expression that the standard javac compiler would reject with a type error.
 
 Here's a scenario illustrating the trade-off:
 
@@ -45,13 +45,59 @@ public class TestGenerics {
         List<MySuperClass> mySuperList = Lists.newArrayList(superHans, subHans);
         Matcher<? super MySuperClass> isSuperHans = Matchers.equalTo(superHans);
         
-        assertThat(mySuperList, Contains.theItem(superHans)); // Will compile
-	assertThat(mySuperList, Matchers.hasItem(subHans)); // Will compile
-        assertThat(mySuperList, Contains.theItem(subHans)); // Will not compile
-        assertThat(mySuperList, Contains.theItem(isSuperHans)); // Will not compile
-        assertThat(mySuperList, Matchers.hasItem(isSuperHans)); // Will compile in Eclipse, but not javac
+        assertThat(mySuperList, Contains.theItem(superHans)); // OK
+        assertThat(mySuperList, Contains.theItem(subHans)); // Does not compile
+	assertThat(mySuperList, Matchers.hasItem(subHans)); // OK
+        assertThat(mySuperList, Matchers.hasItem(isSuperHans)); // Compiles in Eclipse, but not javac
+        assertThat(mySuperList, Contains.theItem(isSuperHans)); // Does not compile
     }
 }
 ```
 
-By using stricter generics, <code>Contains</code> loses the ability to check for an instance of <code>MySubClass</code> in a <code>Collection<MySuperClass></code>, but also loses the ability to introduce a type error that will go undetected by Eclipse's more generics-savvy compiler. We've found the latter annoyance more severe than the former; YMMV.
+By using stricter generics, <code>Contains</code> loses the ability to check for an instance of <code>MySubClass</code> in an <code>Iterable&lt;MySuperClass&gt;</code>, but also loses the ability to introduce a type error that will go undetected by Eclipse's more generics-savvy compiler. We've found the latter annoyance to be more severe than the former; YMMV.
+
+AnIterable
+----------
+
+<code>AnIterable</code> is <code>Matchers.instanceOf(klass)</code> for collections, with a little sugar:
+
+```java
+    Collection<Object> aCollectionOfFineMusicians = newArrayList();
+    aCollectionOfFineMusicians.put("Lee");
+    aCollectionOfFineMusicians.put("Lifeson");
+    aCollectionOfFineMusicians.put("Peart");
+
+    assertThat(aCollectionOfFineMusicians, AnIterable.of(String.class).which(Contains.inAnyOrder("Peart", "Lee", "Lifeson")));
+    assertThat(aCollectionOfFineMusicians, AnIterable.of(String.class).inAscendingOrder());
+    assertThat(aCollectionOfFineMusicians, AnIterable.of(String.class).withoutDuplicates());
+
+    aCollectionOfFineMusicians.clear();
+
+    assertThat(aCollectionOfFineMusicians, AnIterable.of(String.class).withoutContents());
+```
+
+Coercible, Mappable, Reducible, Sorted
+--------------------------------------
+
+It's sometimes useful to be able to match against a transformed value, rather than against the value directly.
+
+For example, given a collection of <code>Employees</code> and a <code>Function&lt;Employee, String&gt;</code> that returns each employee's name, we can say:
+
+```java
+    assertThat(allEmployees.get(1), Coercible.with(toName).to("Angel"));
+    assertThat(allEmployees, Mappable.with(toName).to(Contains.inAnyOrder("Cordelia", "Wesley", "Angel")));
+```
+
+<code>Reducible</code> is useful for summing over a collection, e.g.
+
+```java
+    assertThat(newArrayList(20, 30, 50), Reducible.with(Reducers.sumIntegers).to(100));
+```
+
+Sometimes we care about the sort order of a collection without especially caring what's in it:
+
+```
+    assertThat(someCollection, Sorted.inAscendingOrder());
+    assertThat(someOtherCollection, Sorted.inDescendingOrder());
+    assertThat(someWackyCollection, Sorted.with(wackyComparator, "wacky"));
+```

@@ -9,48 +9,50 @@ import com.google.common.collect.Ordering;
 
 public class Sorted<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
 
-    public static enum OrderType {
-        ASCENDING,
-        DESCENDING,
-        CUSTOM
-    }
+    public static final String ASCENDING = "ascending";
+    public static final String DESCENDING = "descending";
+    public static final String CUSTOM = "custom";
     
     public static <T extends Comparable<T>> Sorted<T> inAscendingOrder() {
         Ordering<T> ordering = Ordering.natural();
-        return with(ordering, OrderType.ASCENDING);
+        return with(ordering, ASCENDING);
     }
     
     public static <T extends Comparable<T>> Sorted<T> inDescendingOrder() {
         Ordering<T> ordering = Ordering.natural().reverse();
-        return with(ordering, OrderType.DESCENDING);
+        return with(ordering, DESCENDING);
     }
     
     public static <T> Sorted<T> with(Comparator<T> comparator) {
+        return with(comparator, CUSTOM);
+    }
+    
+    public static <T> Sorted<T> with(Comparator<T> comparator, String orderType) {
         if (comparator instanceof Ordering) {
-            return with((Ordering<T>) comparator);
+            return with((Ordering<T>) comparator, orderType);
         }
-        return with(Ordering.from(comparator));
+        return with(Ordering.from(comparator), orderType);
     }
     
     public static <T> Sorted<T> with(Ordering<T> ordering) {
-        return with(ordering, OrderType.CUSTOM);
+        return with(ordering, CUSTOM);
     }
     
-    public static <T> Sorted<T> with(Ordering<T> ordering, OrderType orderType) {
+    public static <T> Sorted<T> with(Ordering<T> ordering, String orderType) {
         return new Sorted<T>(ordering, orderType);
     }
     
-    private final OrderType orderType;
+    private final String orderType;
     private final Ordering<T> ordering;
     
-    private Sorted(Ordering<T> ordering, OrderType orderType) {
+    private Sorted(Ordering<T> ordering, String orderType) {
         this.ordering = ordering;
         this.orderType = orderType;
     }
     
     @Override
     public void describeTo(Description description) {
-        description.appendText("an iterable in ").appendText(orderType.name().toLowerCase()).appendText(" order");
+        description.appendText("an iterable in ").appendText(orderType).appendText(" order");
     }
 
     @Override

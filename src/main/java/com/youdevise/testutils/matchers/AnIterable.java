@@ -50,19 +50,27 @@ public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? super T>
     }
 
     public AnIterableWhich<T> inAscendingOrder() {
-        return new AnIterableWhich<T>(this, Sorted.with(getNaturalOrdering()));
+        return new AnIterableWhich<T>(this, Sorted.with(getNaturalOrdering(), Sorted.ASCENDING));
     }
     
     public AnIterableWhich<T> inDescendingOrder() {
-        return new AnIterableWhich<T>(this, Sorted.with(getNaturalOrdering().reverse()));
+        return new AnIterableWhich<T>(this, Sorted.with(getNaturalOrdering().reverse(), Sorted.DESCENDING));
     }
     
     public AnIterableWhich<T> inSortedOrder(Comparator<T> comparator) {
-        return new AnIterableWhich<T>(this, Sorted.with(comparator));
+        return inSortedOrder(comparator, Sorted.CUSTOM);
+    }
+    
+    public AnIterableWhich<T> inSortedOrder(Comparator<T> comparator, String orderType) {
+        return new AnIterableWhich<T>(this, Sorted.with(comparator, orderType));
     }
     
     public AnIterableWhich<T> inSortedOrder(Ordering<T> ordering) {
-        return new AnIterableWhich<T>(this, Sorted.with(ordering));
+        return inSortedOrder(ordering, Sorted.CUSTOM);
+    }
+    
+    public AnIterableWhich<T> inSortedOrder(Ordering<T> ordering, String orderType) {
+        return new AnIterableWhich<T>(this, Sorted.with(ordering, orderType));
     }
     
     private Ordering<T> getNaturalOrdering() {

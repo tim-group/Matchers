@@ -19,7 +19,7 @@ public class ContainsTheItemTest {
     
     @Test public void
     reports_reason_why_each_actual_item_does_not_match_the_expectation() {
-        Matcher<Iterable<String>> containsA = Contains.theItem("a");
+        Matcher<? super Iterable<String>> containsA = Contains.theItem("a");
         List<String> listABC = Arrays.<String>asList("b", "c", "d");
         
         listOutput(containsA, listABC);
@@ -29,9 +29,8 @@ public class ContainsTheItemTest {
         assertThat(containsA, is(MatcherMatcher.a_matcher_giving_a_mismatch_description_of(listABC, containsString("<2> was \"c\""))));    
         assertThat(containsA, is(MatcherMatcher.a_matcher_giving_a_mismatch_description_of(listABC, containsString("<3> was \"d\""))));    
     }
-    
         
-    private void listOutput(Matcher<Iterable<String>> containsOne, List<String> emptyList) {
+    private <T> void listOutput(Matcher<? super Iterable<T>> containsOne, List<T> emptyList) {
         StringDescription description = new StringDescription();
         containsOne.describeTo(description);
         StringDescription mismatchDescription = new StringDescription();
