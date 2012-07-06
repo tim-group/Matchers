@@ -107,7 +107,7 @@ Redescribing matchers
 
 Matchers build up from other matchers sometimes end up with rather unreadable descriptions / mismatch descriptions. It can be helpful to wrap the top-level matcher with a new description and mismatch describer.
 
-'''java
+```java
     @Test public void
     can_replace_mismatch_description_with_simple_text() {
         Matcher<? super String> containsTheMagicWord = Redescribe.theMatcher(containsString("please"))
