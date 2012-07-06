@@ -124,6 +124,6 @@ Matchers build up from other matchers sometimes end up with rather unreadable de
                    a_matcher_giving_a_mismatch_description_of("match this string or else",
                                                               containsString("\"match this string or else\" was an impolite string")));
     }
-'''
+```
 
 The mismatch describer may be a simple string, or may be an instance of <code>MosmatchDescriber</code> which takes the mismatched item and populates the mismatch description.
