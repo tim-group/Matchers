@@ -47,7 +47,7 @@ public class TestGenerics {
         
         assertThat(mySuperList, Contains.theItem(superHans)); // OK
         assertThat(mySuperList, Contains.theItem(subHans)); // Does not compile
-	assertThat(mySuperList, Matchers.hasItem(subHans)); // OK
+        assertThat(mySuperList, Matchers.hasItem(subHans)); // OK
         assertThat(mySuperList, Matchers.hasItem(isSuperHans)); // Compiles in Eclipse, but not javac
         assertThat(mySuperList, Contains.theItem(isSuperHans)); // Does not compile
     }
