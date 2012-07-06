@@ -85,7 +85,7 @@ For example, given a collection of <code>Employees</code> and a <code>Function&l
 
 ```java
     assertThat(allEmployees.get(1), Coercible.with(toName).to("Angel"));
-    assertThat(allEmployees, Mappable.with(toName).to(Contains.inAnyOrder("Cordelia", "Wesley", "Angel")));
+    assertThat(allEmployees, Mappable.with(toName).to(Contains.inAnyOrder("Cordelia", "Wesley", "Charles", "Angel")));
 ```
 
 <code>Reducible</code> is useful for summing over a collection, e.g.
