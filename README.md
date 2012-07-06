@@ -101,3 +101,29 @@ Sometimes we care about the sort order of a collection without especially caring
     assertThat(someOtherCollection, Sorted.inDescendingOrder());
     assertThat(someWackyCollection, Sorted.with(wackyComparator, "wacky"));
 ```
+
+Redescribing matchers
+---------------------
+
+Matchers build up from other matchers sometimes end up with rather unreadable descriptions / mismatch descriptions. It can be helpful to wrap the top-level matcher with a new description and mismatch describer.
+
+'''java
+    @Test public void
+    can_replace_mismatch_description_with_simple_text() {
+        Matcher<? super String> containsTheMagicWord = Redescribe.theMatcher(containsString("please"))
+                                                                 .as("a polite string")
+                                                                 .describingMismatchAs("an impolite string");
+        
+        assertThat(containsTheMagicWord,
+                   a_matcher_with_description("a polite string"));
+        
+        assertThat(containsTheMagicWord,
+                   a_matcher_that_matches("please match this string"));
+        
+        assertThat(containsTheMagicWord,
+                   a_matcher_giving_a_mismatch_description_of("match this string or else",
+                                                              containsString("\"match this string or else\" was an impolite string")));
+    }
+'''
+
+The mismatch describer may be a simple string, or may be an instance of <code>MosmatchDescriber</code> which takes the mismatched item and populates the mismatch description.
