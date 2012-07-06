@@ -126,4 +126,4 @@ Matchers build up from other matchers sometimes end up with rather unreadable de
     }
 ```
 
-The mismatch describer may be a simple string, or may be an instance of <code>MosmatchDescriber</code> which takes the mismatched item and populates the mismatch description.
+The mismatch describer may be a simple string, or may be an instance of <code>MismatchDescriber</code> which takes the mismatched item and populates the mismatch description.
