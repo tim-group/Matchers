@@ -82,7 +82,7 @@ public class Contains {
         return new ContainsTheItems<T>(expected);
     }
 
-    public static <T> Matcher<Iterable<T>> theItem(final Matcher<? super T> expected) {
+    public static <T> Matcher<Iterable<T>> theItem(final Matcher<T> expected) {
         return new ContainsTheItem<T>(expected);
     }
 
