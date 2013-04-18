@@ -4,7 +4,7 @@ apply plugin: 'eclipse'
 //apply plugin: 'idea' // by all means use this fine IDE, but it's opt-in.
 apply plugin: 'java'
 apply plugin: 'yd'
-apply plugin: 'code-quality'
+apply plugin: 'checkstyle'
 
 sourceCompatibility = "1.6"
 
@@ -16,12 +16,6 @@ dependencies {
     
     testCompile     group: "junit",         name: "junit-dep",           version: "4.10"
     testCompile     group: 'org.jmock',     name: 'jmock',               version: '2.6.0-RC1'
-}
-
-eclipseClasspath {
-    variables = [
-        GRADLE_CACHE: file(gradle.gradleUserHomeDir.absolutePath + "/cache")
-    ]
 }
 
 // this block is here to tell Gradle to fetch our youDevise plugins.
