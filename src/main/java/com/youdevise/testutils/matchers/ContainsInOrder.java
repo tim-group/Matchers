@@ -8,8 +8,9 @@ import org.hamcrest.Matchers;
 
 public class ContainsInOrder<T> extends CollectionMatcher<T> {
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public ContainsInOrder(List<Matcher<? super T>> expected) {
-        super(expected, (expected == null || expected.size() == 0) ? Matchers.<T>emptyIterable() : Matchers.<T>contains(expected));
+        super(expected, (expected == null || expected.size() == 0) ? (Matcher)Matchers.emptyIterable() : Matchers.<T>contains(expected));
     }
 
     @Override

@@ -26,7 +26,7 @@ public class MappableTest {
         };
         
         assertThat(Mappable.with(stringLength).to(3, 5),
-                   a_matcher_with_description("an iterable which maps to iterable over [<3>, <5>]"));
+                   a_matcher_with_description("an iterable which maps to iterable containing [<3>, <5>]"));
         
         assertThat(Mappable.with(stringLength).to(3, 5, 5, 3, 5, 4, 3, 4, 3),
                    a_matcher_that_matches(newArrayList("The quick brown fox jumps over the lazy hen".split("\\s"))));
