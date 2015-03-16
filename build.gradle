@@ -1,4 +1,4 @@
-releaseVersion = '0.0'
+ext.releaseVersion = '0.0'
 
 apply plugin: 'eclipse'
 //apply plugin: 'idea' // by all means use this fine IDE, but it's opt-in.
