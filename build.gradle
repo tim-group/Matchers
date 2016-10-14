@@ -6,7 +6,8 @@ apply plugin: 'java'
 apply plugin: 'yd'
 apply plugin: 'checkstyle'
 
-sourceCompatibility = "1.6"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 dependencies {
     compile group: 'org.hamcrest',      name: 'hamcrest-library',        version: '1.3'

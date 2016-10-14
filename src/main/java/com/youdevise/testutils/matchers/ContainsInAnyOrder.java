@@ -13,7 +13,7 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
     public ContainsInAnyOrder(List<Matcher<? super T>> expected) {
         super(expected, (expected == null || expected.size() == 0)
                             ? (Matcher)Matchers.emptyIterable()
-                            : Matchers.<T>containsInAnyOrder(expected));
+                            : (Matcher)Matchers.containsInAnyOrder(expected));
     }
 
     @Override
