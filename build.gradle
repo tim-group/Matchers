@@ -10,11 +10,13 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 dependencies {
-    compile group: 'org.hamcrest',      name: 'hamcrest-library',        version: '1.3'
-    compile group: 'com.google.guava',  name: 'guava',                   version: '18.0'
+    compile "org.hamcrest:hamcrest-library:1.3"
+    compile "com.google.guava:guava:18.0"
+    compile "com.fasterxml.jackson.core:jackson-core:2.7.4"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.7.4"
 
-    testCompile     group: "junit",         name: "junit",               version: "4.12"
-    testCompile     group: 'org.jmock',     name: 'jmock',               version: '2.6.0-RC1'
+    testCompile "junit:junit:4.12"
+    testCompile "org.jmock:jmock:2.6.0-RC1"
 }
 
 // this block is here to tell Gradle to fetch our youDevise plugins.
@@ -24,7 +26,7 @@ buildscript {
         mavenRepo name: 'ydCentral', urls: "${repoUrl}/groups/public"
     }
     dependencies {
-        classpath group: 'com.youdevise', name: 'gradle-plugins', version: "0.+"
+        classpath "com.youdevise:gradle-plugins:0.+"
     }
 }
 
