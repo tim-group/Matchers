@@ -3,6 +3,7 @@ package com.youdevise.testutils.matchers.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.google.common.collect.ImmutableList;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -177,6 +178,16 @@ public class JsonStructureMatchersTest {
     }
 
     @Test
+    public void matches_empty_array_when_passed_of_with_zero_elements() {
+        assertThat("[]", is(json(jsonArray().of())));
+    }
+
+    @Test
+    public void matches_empty_array_when_passed_of_with_empty_list() {
+        assertThat("[]", is(json(jsonArray().of(ImmutableList.of()))));
+    }
+
+    @Test
     public void rejects_array_with_unexpected_contents() {
         assertThat("[1]", is(json(not(jsonArray()))));
     }
@@ -205,6 +216,11 @@ public class JsonStructureMatchersTest {
     public void matches_array_containing_at_least_specified_items() {
         assertThat("[1,2,3]",
                    is(json(allOf(jsonArray().including(jsonInt(1)), jsonArray().including(jsonInt(2)), jsonArray().including(jsonInt(3))))));
+    }
+
+    @Test
+    public void matches_empty_array_when_passed_in_any_order_with_zero_elements() {
+        assertThat("[]", is(json(jsonArray().inAnyOrder())));
     }
 
     @Test

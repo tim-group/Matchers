@@ -31,6 +31,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import static com.youdevise.testutils.matchers.json.JsonEquivalenceMatchers.equivalentJsonNode;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
@@ -406,7 +407,7 @@ public final class JsonStructureMatchers {
     }
 
     public static class ArrayNodeMatcher extends TypeSafeDiagnosingMatcher<ArrayNode> {
-        private Matcher<?> contentsMatcher = Matchers.emptyIterable();
+        private Matcher<?> contentsMatcher = emptyIterable();
 
         @Override
         protected boolean matchesSafely(final ArrayNode item, Description mismatchDescription) {
@@ -433,12 +434,20 @@ public final class JsonStructureMatchers {
 
         @SafeVarargs
         final public <T extends JsonNode> ArrayNodeMatcher of(Matcher<? super T>... nodeMatchers) {
-            contentsMatcher = contains(ImmutableList.copyOf(nodeMatchers));
+            if (nodeMatchers.length == 0) {
+                contentsMatcher = emptyIterable();
+            } else {
+                contentsMatcher = contains(ImmutableList.copyOf(nodeMatchers));
+            }
             return this;
         }
 
         final public <T extends JsonNode> ArrayNodeMatcher of(List<Matcher<? super T>> nodeMatchers) {
-            contentsMatcher = contains(ImmutableList.copyOf(nodeMatchers));
+            if (nodeMatchers.isEmpty()) {
+                contentsMatcher = emptyIterable();
+            } else {
+                contentsMatcher = contains(ImmutableList.copyOf(nodeMatchers));
+            }
             return this;
         }
 
