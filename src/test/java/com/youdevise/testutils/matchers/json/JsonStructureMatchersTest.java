@@ -1,22 +1,27 @@
 package com.youdevise.testutils.matchers.json;
 
+import java.util.List;
+import java.util.function.Function;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.google.common.collect.ImmutableList;
-import com.youdevise.testutils.matchers.MatcherMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Test;
 
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static com.youdevise.testutils.matchers.json.JsonEquivalenceMatchers.equivalentJsonNode;
 import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.*;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -180,6 +185,14 @@ public class JsonStructureMatchersTest {
     }
 
     @Test
+    public void matches_any_object() {
+        assertThat(json(jsonAnyObject()), is(a_matcher_that_matches("{}")));
+        assertThat(json(jsonAnyObject()), is(not(a_matcher_that_matches("[]"))));
+        assertThat(json(jsonAnyObject()), is(not(a_matcher_that_matches("\"foo\""))));
+        assertThat(json(jsonAnyObject()), is(not(a_matcher_that_matches("null"))));
+    }
+
+    @Test
     public void matches_empty_array() {
         assertThat("[]", is(json(jsonArray())));
     }
@@ -240,6 +253,19 @@ public class JsonStructureMatchersTest {
     public void matches_jackson_tree() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         assertThat(mapper.readTree("{ \"a\": 1 }"), is(jacksonTree(jsonObject().withProperty("a", 1))));
+    }
+
+    @Test
+    public void matches_bytes() throws Exception {
+        assertThat(jsonBytes(jsonAnyObject()), is(a_matcher_that_matches("{}".getBytes(UTF_8))));
+        assertThat(jsonBytes(jsonAnyObject()), is(a_matcher_giving_a_mismatch_description_of("zzzz".getBytes(UTF_8), containsString("Invalid JSON"))));
+    }
+
+    @Test
+    public void matches_representation() throws Exception {
+        Function<List<String>, String> makeJsonFromList = (List<String> l) -> l.get(0);
+        assertThat(makesJsonStructuredAs(makeJsonFromList, jsonAnyObject()), is(a_matcher_that_matches(singletonList("{}"))));
+        assertThat(makesJsonStructuredAs(makeJsonFromList, jsonAnyObject()), is(a_matcher_giving_a_mismatch_description_of(singletonList("zzz"), containsString("Invalid JSON"))));
     }
 
     private static <T> Matcher<? extends T> anySubclassOf(final Class<T> clazz) {
