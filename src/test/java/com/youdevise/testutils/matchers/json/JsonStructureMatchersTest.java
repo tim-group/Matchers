@@ -4,23 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.google.common.collect.ImmutableList;
+import com.youdevise.testutils.matchers.MatcherMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Test;
 
+import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static com.youdevise.testutils.matchers.json.JsonEquivalenceMatchers.equivalentJsonNode;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jacksonTree;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.json;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonArray;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonBoolean;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonDouble;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonInt;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonLong;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonNull;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonNumber;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonObject;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonString;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.both;
@@ -86,6 +78,14 @@ public class JsonStructureMatchersTest {
     }
 
     @Test
+    public void matches_any_number() {
+        assertThat(json(jsonAnyNumber()), is(a_matcher_that_matches("1")));
+        assertThat(json(jsonAnyNumber()), is(a_matcher_that_matches("1.0")));
+        assertThat(json(jsonAnyNumber()), is(not(a_matcher_that_matches("null"))));
+        assertThat(json(jsonAnyNumber()), is(not(a_matcher_that_matches("\"1\""))));
+    }
+
+    @Test
     public void matches_boolean() {
         assertThat("true", is(json(jsonBoolean(true))));
     }
@@ -103,6 +103,13 @@ public class JsonStructureMatchersTest {
     @Test
     public void matches_string_with_matcher() {
         assertThat("\"foo\"", is(json(jsonString(equalTo("foo")))));
+    }
+
+    @Test
+    public void matches_any_string() {
+        assertThat(json(jsonAnyString()), is(a_matcher_that_matches("\"foo\"")));
+        assertThat(json(jsonAnyString()), is(not(a_matcher_that_matches("null"))));
+        assertThat(json(jsonAnyString()), is(not(a_matcher_that_matches("1.0"))));
     }
 
     @Test

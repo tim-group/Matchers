@@ -240,6 +240,10 @@ public final class JsonStructureMatchers {
         }
     }
 
+    public static Matcher<TextNode> jsonAnyString() {
+        return jsonString(any(String.class));
+    }
+
     public static Matcher<TextNode> jsonString(String value) {
         return jsonString(equalTo(value));
     }
@@ -278,6 +282,10 @@ public final class JsonStructureMatchers {
                 description.appendText("null");
             }
         };
+    }
+
+    public static Matcher<NumericNode> jsonAnyNumber() {
+        return any(NumericNode.class);
     }
 
     public static Matcher<NumericNode> jsonNumber(long n) {
