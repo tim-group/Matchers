@@ -1,39 +1,75 @@
-ext.releaseVersion = '0.0'
+allprojects {
+    apply plugin: 'eclipse'
+    apply plugin: 'java'
 
-apply plugin: 'eclipse'
-//apply plugin: 'idea' // by all means use this fine IDE, but it's opt-in.
-apply plugin: 'java'
-apply plugin: 'yd'
+    sourceCompatibility = 1.8
+    group = 'com.timgroup'
+    if (System.getenv('BUILD_NUMBER') != null) {
+        version = "0.0." + System.getenv('BUILD_NUMBER')
+    }
+}
 
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
+ext {
+    jacksonVersion = '2.7.4'
+}
+
+allprojects {
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives sourcesJar
+    }
+}
 
 dependencies {
     compile "org.hamcrest:hamcrest-library:1.3"
     compile "com.google.guava:guava:18.0"
-    compile "com.fasterxml.jackson.core:jackson-core:2.7.4"
-    compile "com.fasterxml.jackson.core:jackson-databind:2.7.4"
+    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 
     testCompile "junit:junit:4.12"
     testCompile "org.jmock:jmock:2.6.0-RC1"
 }
 
-// this block is here to tell Gradle to fetch our youDevise plugins.
-// so don't edit anything below this point unless you have to
+allprojects {
+    repositories {
+        if (project.hasProperty('repoUrl')) {
+            maven {
+                name "nexus"
+                url "${project.repoUrl}/groups/public"
+            }
+        } else {
+            mavenCentral()
+        }
+    }
+}
+
+apply plugin: 'maven'
+
+uploadArchives {
+    if (project.hasProperty('repoUrl')) {
+        repositories {
+            mavenDeployer {
+                repository(url: "${project.repoUrl}/repositories/yd-release-candidates") {
+                    authentication(userName: project.repoUsername, password: project.repoPassword)
+                }
+            }
+        }
+    }
+}
+
 buildscript {
     repositories {
-        mavenRepo name: 'ydCentral', urls: "${repoUrl}/groups/public"
+        if (project.hasProperty('repoUrl')) {
+            maven {
+                url "${project.repoUrl}/groups/public"
+            }
+        }
+        else {
+            mavenCentral()
+        }
     }
-    dependencies {
-        classpath "com.youdevise:gradle-plugins:0.+"
-    }
-}
-
-task sourcesJar(type: Jar, dependsOn:classes) {
-     classifier = 'sources'
-     from sourceSets.main.allSource
-}
-
-artifacts {
-     archives sourcesJar
 }
