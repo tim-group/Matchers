@@ -3,7 +3,7 @@ allprojects {
     apply plugin: 'java'
 
     sourceCompatibility = 1.8
-    group = 'com.timgroup'
+    group = 'com.youdevise'
     if (System.getenv('BUILD_NUMBER') != null) {
         version = "0.0." + System.getenv('BUILD_NUMBER')
     }
