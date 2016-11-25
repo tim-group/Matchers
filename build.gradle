@@ -47,14 +47,16 @@ allprojects {
     }
 }
 
-apply plugin: 'maven'
+allprojects {
+    apply plugin: 'maven'
 
-uploadArchives {
-    if (project.hasProperty('repoUrl')) {
-        repositories {
-            mavenDeployer {
-                repository(url: "${project.repoUrl}/repositories/yd-release-candidates") {
-                    authentication(userName: project.repoUsername, password: project.repoPassword)
+    uploadArchives {
+        if (project.hasProperty('repoUrl')) {
+            repositories {
+                mavenDeployer {
+                    repository(url: "${project.repoUrl}/repositories/yd-release-candidates") {
+                        authentication(userName: project.repoUsername, password: project.repoPassword)
+                    }
                 }
             }
         }
