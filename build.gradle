@@ -1,6 +1,7 @@
 allprojects {
     apply plugin: 'eclipse'
     apply plugin: 'java'
+    apply plugin: 'jarmangit'
 
     sourceCompatibility = 1.8
     group = 'com.youdevise'
@@ -73,5 +74,9 @@ buildscript {
         else {
             mavenCentral()
         }
+    }
+
+    dependencies {
+        classpath "com.timgroup:gradle-jarmangit:1.0.+"
     }
 }
