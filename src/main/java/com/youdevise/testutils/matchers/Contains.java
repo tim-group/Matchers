@@ -4,22 +4,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
-import com.google.common.collect.Lists;
-
-public class Contains {
+public final class Contains {
     private Contains() { }
 
+    @SafeVarargs
     public static <T> Matcher<Iterable<T>> inOrder(final T... expected) {
-        final List<Matcher<? super T>> expectedMatchers = new ArrayList<Matcher<? super T>>();
+        final List<Matcher<? super T>> expectedMatchers = new ArrayList<>();
         for (final T t : expected) {
             expectedMatchers.add(Matchers.equalTo(t));
         }
         return inOrder(expectedMatchers);
     }
 
+    @SafeVarargs
     public static <T> Matcher<Iterable<T>> inOrder(final Matcher<T>... expected) {
         return inOrder(Arrays.asList((Matcher<? super T>[]) expected));
     }
@@ -29,7 +30,7 @@ public class Contains {
     }
 
     public static <T> Matcher<Iterable<T>> inOrder(final List<Matcher<? super T>> expected) {
-        return new ContainsInOrder<T>(expected);
+        return new ContainsInOrder<>(expected);
     }
 
     @SuppressWarnings("unchecked")
@@ -42,14 +43,16 @@ public class Contains {
         return inOrder(expected);
     }
 
+    @SafeVarargs
     public static <T> Matcher<Iterable<T>> inAnyOrder(final T... expected) {
-        final List<Matcher<? super T>> expectedMatchers = new ArrayList<Matcher<? super T>>();
+        final List<Matcher<? super T>> expectedMatchers = new ArrayList<>();
         for (final T t : expected) {
             expectedMatchers.add(Matchers.equalTo(t));
         }
         return inAnyOrder(expectedMatchers);
     }
 
+    @SafeVarargs
     public static <T> Matcher<Iterable<T>> inAnyOrder(final Matcher<T>... expected) {
         return inAnyOrder(Arrays.asList((Matcher<? super T>[]) expected));
     }
@@ -59,17 +62,19 @@ public class Contains {
     }
 
     public static <T> Matcher<Iterable<T>> inAnyOrder(final List<Matcher<? super T>> expected) {
-        return new ContainsInAnyOrder<T>(expected);
+        return new ContainsInAnyOrder<>(expected);
     }
 
+    @SafeVarargs
     public static <T> Matcher<Iterable<T>> theItems(final T... expected) {
-        final List<Matcher<? super T>> expectedMatchers = new ArrayList<Matcher<? super T>>();
+        final List<Matcher<? super T>> expectedMatchers = new ArrayList<>();
         for (final T t : expected) {
             expectedMatchers.add(Matchers.equalTo(t));
         }
         return theItems(expectedMatchers);
     }
 
+    @SafeVarargs
     public static <T> Matcher<Iterable<T>> theItems(final Matcher<T>... expected) {
         return theItems(Arrays.asList((Matcher<? super T>[]) expected));
     }
@@ -79,11 +84,11 @@ public class Contains {
     }
 
     public static <T> Matcher<Iterable<T>> theItems(final List<Matcher<? super T>> expected) {
-        return new ContainsTheItems<T>(expected);
+        return new ContainsTheItems<>(expected);
     }
 
     public static <T> Matcher<Iterable<T>> theItem(final Matcher<T> expected) {
-        return new ContainsTheItem<T>(expected);
+        return new ContainsTheItem<>(expected);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
