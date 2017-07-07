@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 public final class HttpEntityMatchers {
     public static <T extends TreeNode> Matcher<HttpEntity> json(Matcher<T> contentMatcher) {
-        return new HttpContentMatcher<T>(mimeType(equalTo("application/json")), contentMatcher) {
+        return new HttpContentMatcher<T>(mimeType(equalTo("application/json")), diagnoseJson(contentMatcher)) {
             @Override
             protected T doParse(HttpEntity item) throws IOException {
                 return new MappingJsonFactory().createParser(item.getContent()).readValueAsTree();
@@ -172,6 +172,22 @@ public final class HttpEntityMatchers {
             return builder.toString();
         }
     };
+
+    private static <T extends TreeNode> Matcher<T> diagnoseJson(Matcher<T> contentMatcher) {
+        return new TypeSafeDiagnosingMatcher<T>() {
+            @Override
+            protected boolean matchesSafely(T item, Description mismatchDescription) {
+                contentMatcher.describeMismatch(item, mismatchDescription);
+                mismatchDescription.appendText("\nActual JSON was: ").appendValue(item);
+                return contentMatcher.matches(item);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendDescriptionOf(contentMatcher);
+            }
+        };
+    }
 
     private HttpEntityMatchers() {
     }
