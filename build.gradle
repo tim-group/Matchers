@@ -11,7 +11,7 @@ allprojects {
 }
 
 ext {
-    jacksonVersion = '2.7.4'
+    jacksonVersion = '2.8.7'
 }
 
 allprojects {
