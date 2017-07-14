@@ -19,20 +19,22 @@ public class Mappable<A, B> extends TypeSafeDiagnosingMatcher<Iterable<A>> {
         public MapperBinder(Function<? super A, ? extends B> mapper) {
             this.mapper = mapper;
         }
-        
-        public Mappable<A, B> to(B...expectedItems) {
+
+        @SafeVarargs
+        public final Mappable<A, B> to(B...expectedItems) {
             return to(Contains.inOrder(expectedItems));
         }
-        
-        public Mappable<A, B> to(Matcher<B>...expected) {
+
+        @SafeVarargs
+        public final Mappable<A, B> to(Matcher<B>...expected) {
             return to(Contains.inOrder(expected));
         }
         
-        public Mappable<A, B> to(Iterable<Matcher<? super B>> expected) {
+        public final Mappable<A, B> to(Iterable<Matcher<? super B>> expected) {
             return to(Contains.inOrder(expected));
         }
         
-        public Mappable<A, B> to(Matcher<? super Iterable<B>> mappedIterableMatcher) {
+        public final Mappable<A, B> to(Matcher<? super Iterable<B>> mappedIterableMatcher) {
             return new Mappable<>(mapper, mappedIterableMatcher);
         }
     }
