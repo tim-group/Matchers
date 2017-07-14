@@ -1,11 +1,14 @@
 package com.youdevise.testutils.matchers;
 
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.StreamSupport;
 
-import com.google.common.collect.Iterables;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+
+import static java.util.stream.Collectors.toList;
 
 public class Mappable<A, B> extends TypeSafeDiagnosingMatcher<Iterable<A>> {
 
@@ -54,11 +57,8 @@ public class Mappable<A, B> extends TypeSafeDiagnosingMatcher<Iterable<A>> {
 
     @Override
     protected boolean matchesSafely(Iterable<A> item, Description mismatchDescription) {
-        Iterable<B> mappedItem = Iterables.transform(item, mapper::apply);
-        if (mappedIterableMatcher.matches(mappedItem)) {
-            return true;
-        }
+        List<B> mappedItem = StreamSupport.stream(item.spliterator(), false).map(mapper::apply).collect(toList());
         mappedIterableMatcher.describeMismatch(mappedItem, mismatchDescription);
-        return false;
+        return mappedIterableMatcher.matches(mappedItem);
     }
 }
