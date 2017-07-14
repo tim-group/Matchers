@@ -1,22 +1,22 @@
 package com.youdevise.testutils.matchers;
 
+import java.util.function.Function;
+
+import com.google.common.collect.Iterables;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-
 public class Mappable<A, B> extends TypeSafeDiagnosingMatcher<Iterable<A>> {
 
-    public static <A, B> MapperBinder<A, B> with(Function<A, B> mapper) {
-        return new MapperBinder<A, B>(mapper);
+    public static <A, B> MapperBinder<A, B> with(Function<? super A, ? extends B> mapper) {
+        return new MapperBinder<>(mapper);
     }
     
     public static final class MapperBinder<A, B> {
-        private final Function<A, B> mapper;
+        private final Function<? super A, ? extends B> mapper;
         
-        public MapperBinder(Function<A, B> mapper) {
+        public MapperBinder(Function<? super A, ? extends B> mapper) {
             this.mapper = mapper;
         }
         
@@ -33,14 +33,14 @@ public class Mappable<A, B> extends TypeSafeDiagnosingMatcher<Iterable<A>> {
         }
         
         public Mappable<A, B> to(Matcher<? super Iterable<B>> mappedIterableMatcher) {
-            return new Mappable<A, B>(mapper, mappedIterableMatcher);
+            return new Mappable<>(mapper, mappedIterableMatcher);
         }
     }
     
-    private final Function<A, B> mapper;
+    private final Function<? super A, ? extends B> mapper;
     private final Matcher<? super Iterable<B>> mappedIterableMatcher;
 
-    public Mappable(Function<A, B> mapper, Matcher<? super Iterable<B>> mappedIterableMatcher) {
+    public Mappable(Function<? super A, ? extends B> mapper, Matcher<? super Iterable<B>> mappedIterableMatcher) {
         this.mapper = mapper;
         this.mappedIterableMatcher = mappedIterableMatcher;
     }
@@ -52,7 +52,7 @@ public class Mappable<A, B> extends TypeSafeDiagnosingMatcher<Iterable<A>> {
 
     @Override
     protected boolean matchesSafely(Iterable<A> item, Description mismatchDescription) {
-        Iterable<B> mappedItem = Iterables.transform(item, mapper);
+        Iterable<B> mappedItem = Iterables.transform(item, mapper::apply);
         if (mappedIterableMatcher.matches(mappedItem)) {
             return true;
         }
