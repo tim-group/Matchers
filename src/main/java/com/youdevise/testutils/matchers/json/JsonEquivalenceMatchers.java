@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
-import com.google.common.base.Throwables;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -28,7 +27,7 @@ public final class JsonEquivalenceMatchers {
                 try {
                     return MAPPER.writeValueAsString(item);
                 } catch (JsonProcessingException e) {
-                    throw Throwables.propagate(e);
+                    throw new RuntimeException("Failed to parse JSON string: " + expectedJsonSource, e);
                 }
             }
         };
