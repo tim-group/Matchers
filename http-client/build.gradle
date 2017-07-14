@@ -1,7 +1,9 @@
 apply plugin: 'eclipse'
 apply plugin: 'java'
 
-archivesBaseName = 'HttpClientMatchers'
+ext {
+    artifactId = 'HttpClientMatchers'
+}
 
 dependencies {
     compile project(":")

@@ -15,13 +15,60 @@ ext {
 }
 
 allprojects {
+    jar {
+        manifest {
+            attributes(
+                    'Implementation-Title': project.name,
+                    'Implementation-Version': project.version,
+                    'Implementation-Vendor': 'TIM Group Ltd'
+            )
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        sourceCompatibility = "1.8"
+        targetCompatibility = "1.8"
+        options.encoding = "UTF-8"
+        options.incremental = true
+        options.deprecation = true
+        options.compilerArgs << "-parameters"
+    }
+
+    repositories {
+        maven {
+            name "nexus"
+            url "${project.repoUrl}/groups/public"
+        }
+    }
+
+    apply plugin: 'maven-publish'
+
+    publishing {
+        repositories {
+            maven {
+                url "${project.repoUrl}/repositories/yd-release-candidates"
+                credentials {
+                    username = project.repoUsername
+                    password = project.repoPassword
+                }
+            }
+        }
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId project.ext.has('artifactId') ? project.ext.artifactId
+                        : project == rootProject ? project.name
+                        : rootProject.name + "-" + project.name
+                from components.java
+                artifact(sourcesJar) {
+                    classifier "sources"
+                }
+            }
+        }
+    }
+
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
         from sourceSets.main.allSource
-    }
-
-    artifacts {
-        archives sourcesJar
     }
 }
 
@@ -33,35 +80,6 @@ dependencies {
 
     testCompile "junit:junit:4.12"
     testCompile "org.jmock:jmock:2.6.0-RC1"
-}
-
-allprojects {
-    repositories {
-        if (project.hasProperty('repoUrl')) {
-            maven {
-                name "nexus"
-                url "${project.repoUrl}/groups/public"
-            }
-        } else {
-            mavenCentral()
-        }
-    }
-}
-
-allprojects {
-    apply plugin: 'maven'
-
-    uploadArchives {
-        if (project.hasProperty('repoUrl')) {
-            repositories {
-                mavenDeployer {
-                    repository(url: "${project.repoUrl}/repositories/yd-release-candidates") {
-                        authentication(userName: project.repoUsername, password: project.repoPassword)
-                    }
-                }
-            }
-        }
-    }
 }
 
 buildscript {
