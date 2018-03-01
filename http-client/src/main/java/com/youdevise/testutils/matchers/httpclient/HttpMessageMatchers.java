@@ -1,7 +1,5 @@
 package com.youdevise.testutils.matchers.httpclient;
 
-import java.util.Set;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -10,6 +8,8 @@ import org.apache.http.HttpMessage;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+
+import java.util.Set;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -58,7 +58,7 @@ public final class HttpMessageMatchers {
                 }
                 String value = headers[0].getValue();
                 mismatchDescription.appendText("in ").appendValue(headerName).appendText(" header: ");
-                valueMatcher.describeMismatch(item, mismatchDescription);
+                valueMatcher.describeMismatch(value, mismatchDescription);
                 return valueMatcher.matches(value);
             }
 
@@ -117,7 +117,7 @@ public final class HttpMessageMatchers {
         return new TypeSafeDiagnosingMatcher<Set<String>>() {
             @Override
             protected boolean matchesSafely(Set<String> item, Description mismatchDescription) {
-                mismatchDescription.appendText("does not contain ").appendValue(value);
+                mismatchDescription.appendText("contained ").appendValue(item);
                 return item.contains(value);
             }
 
