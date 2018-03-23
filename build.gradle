@@ -1,9 +1,10 @@
-allprojects {
-    apply plugin: 'eclipse'
-    apply plugin: 'java'
-    apply plugin: 'jarmangit'
+plugins {
+    id "com.timgroup.jarmangit" version "1.1.86" apply false
+}
 
-    sourceCompatibility = 1.8
+allprojects {
+    apply plugin: 'com.timgroup.jarmangit'
+
     group = 'com.youdevise'
     if (System.getenv('BUILD_NUMBER') != null) {
         version = "0.0." + System.getenv('BUILD_NUMBER')
@@ -15,7 +16,9 @@ ext {
 }
 
 allprojects {
-    jar {
+    apply plugin: "java-library"
+
+    tasks.withType(Jar).all {
         manifest {
             attributes(
                     'Implementation-Title': project.name,
@@ -25,7 +28,7 @@ allprojects {
         }
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).all {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
         options.encoding = "UTF-8"
@@ -73,28 +76,11 @@ allprojects {
 }
 
 dependencies {
-    compile "org.hamcrest:hamcrest-library:1.3"
-    compile "com.google.guava:guava:21.0"
-    compile "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
-    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    api "org.hamcrest:hamcrest-library:1.3"
+    api "com.google.guava:guava:21.0"
+    api "com.fasterxml.jackson.core:jackson-core:$jacksonVersion"
+    api "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 
-    testCompile "junit:junit:4.12"
-    testCompile "org.jmock:jmock:2.6.0"
-}
-
-buildscript {
-    repositories {
-        if (project.hasProperty('repoUrl')) {
-            maven {
-                url "${project.repoUrl}/groups/public"
-            }
-        }
-        else {
-            mavenCentral()
-        }
-    }
-
-    dependencies {
-        classpath "com.timgroup:gradle-jarmangit:1.0.+"
-    }
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.jmock:jmock:2.6.0"
 }
