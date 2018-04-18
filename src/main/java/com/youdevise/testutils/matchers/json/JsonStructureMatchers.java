@@ -1,13 +1,5 @@
 package com.youdevise.testutils.matchers.json;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.function.Function;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.BooleanNode;
@@ -25,8 +17,15 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 
 import static com.youdevise.testutils.matchers.json.JsonEquivalenceMatchers.equivalentJsonNode;
 import static org.hamcrest.Matchers.any;
@@ -252,11 +251,10 @@ public final class JsonStructureMatchers {
         return new TypeSafeDiagnosingMatcher<TextNode>() {
             @Override
             protected boolean matchesSafely(TextNode item, Description mismatchDescription) {
-                if (!valueMatcher.matches(item.asText())) {
-                    mismatchDescription.appendText("text was: ").appendValue(item.asText());
-                    return false;
-                }
-                return true;
+                String text = item.asText();
+                mismatchDescription.appendText("text ");
+                valueMatcher.describeMismatch(text, mismatchDescription);
+                return valueMatcher.matches(text);
             }
 
             @Override
