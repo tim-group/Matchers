@@ -24,8 +24,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     reports_when_the_actual_collection_is_empty() {
 
-        Matcher<Iterable<String>> containsOne = Contains.inAnyOrder("a");
-        List<String> emptyList = Arrays.<String>asList();
+        Matcher<? super Iterable<? extends String>> containsOne = Contains.inAnyOrder("a");
+        List<String> emptyList = Arrays.asList();
 
         listOutput(containsOne, emptyList);
 
@@ -39,8 +39,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     reports_when_expected_collection_was_empty_but_items_were_unexpectedly_returned() {
 
-        Matcher<Iterable<String>> containsEmpty = Contains.inAnyOrder();
-        List<String> listOfOne = Arrays.<String>asList("a");
+        Matcher<? super Iterable<?>> containsEmpty = Contains.inAnyOrder();
+        List<String> listOfOne = Arrays.asList("a");
 
         listOutput(containsEmpty, listOfOne);
 
@@ -52,8 +52,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     reports_the_unmatched_expectations_when_actual_list_shorter_than_expected_list() {
 
-        Matcher<Iterable<String>> containsOneAndTwo = Contains.inAnyOrder("a", "b");
-        List<String> listOfOne = Arrays.<String>asList("a");
+        Matcher<? super Iterable<? extends String>> containsOneAndTwo = Contains.inAnyOrder("a", "b");
+        List<String> listOfOne = Arrays.asList("a");
 
         listOutput(containsOneAndTwo, listOfOne);
 
@@ -68,8 +68,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     reports_all_unmatched_expectations() {
 
-        Matcher<Iterable<String>> contains1234 = Contains.inAnyOrder("a", "b", "c", "d");
-        List<String> listOfOne = Arrays.<String>asList("a");
+        Matcher<? super Iterable<? extends String>> contains1234 = Contains.inAnyOrder("a", "b", "c", "d");
+        List<String> listOfOne = Arrays.asList("a");
 
         listOutput(contains1234, listOfOne);
 
@@ -90,8 +90,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     reports_all_unexpected_items() {
 
-        Matcher<Iterable<String>> containsOne = Contains.inAnyOrder("a");
-        List<String> listOf1234 = Arrays.<String>asList("a", "b", "c", "d");
+        Matcher<? super Iterable<? extends String>> containsOne = Contains.inAnyOrder("a");
+        List<String> listOf1234 = Arrays.asList("a", "b", "c", "d");
 
         listOutput(containsOne, listOf1234);
 
@@ -107,8 +107,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     accepts_when_right_items_are_found_but_in_the_wrong_order() {
 
-        Matcher<Iterable<String>> containsOneTwo = Contains.inAnyOrder("a", "b");
-        List<String> listOfTwoOne = Arrays.<String>asList("b", "a");
+        Matcher<? super Iterable<? extends String>> containsOneTwo = Contains.inAnyOrder("a", "b");
+        List<String> listOfTwoOne = Arrays.asList("b", "a");
 
         assertThat(containsOneTwo, is(a_matcher_that_matches(listOfTwoOne)));
     }
@@ -116,8 +116,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     reports_each_unmatched_item() {
 
-        Matcher<Iterable<String>> containsOneTwo = Contains.inAnyOrder("a", "b", "c");
-        List<String> listOfOneThree = Arrays.<String>asList("a", "c", "d");
+        Matcher<? super Iterable<? extends String>> containsOneTwo = Contains.inAnyOrder("a", "b", "c");
+        List<String> listOfOneThree = Arrays.asList("a", "c", "d");
 
         listOutput(containsOneTwo, listOfOneThree);
 
@@ -134,8 +134,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     reports_indices_of_unmatched_matchers_and_unexpected_items() {
 
-        Matcher<Iterable<String>> expected = Contains.inAnyOrder("a", "b", "c", "e", "f");
-        List<String> actual = Arrays.<String>asList("a", "c", "d", "e", "g");
+        Matcher<? super Iterable<? extends String>> expected = Contains.inAnyOrder("a", "b", "c", "e", "f");
+        List<String> actual = Arrays.asList("a", "c", "d", "e", "g");
 
         listOutput(expected, actual);
 
@@ -151,8 +151,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     test_reports_unexpected_and_missing_items() {
 
-        Matcher<Iterable<String>> containsABCD = Contains.inAnyOrder("a", "b", "c", "d");
-        List<String> listOfACDE = Arrays.<String>asList("a", "c", "d", "e");
+        Matcher<? super Iterable<? extends String>> containsABCD = Contains.inAnyOrder("a", "b", "c", "d");
+        List<String> listOfACDE = Arrays.asList("a", "c", "d", "e");
 
         listOutput(containsABCD, listOfACDE);
 
@@ -168,18 +168,18 @@ public class ContainsInAnyOrderTest {
     @SuppressWarnings("unchecked")
     @Test public void
     matches_empty_with_empty() {
-        List<String> emptyList = Arrays.<String>asList();
+        List<String> emptyList = Arrays.asList();
 
-        Matcher<Iterable<String>> containsEmpty = Contains.inAnyOrder();
+        Matcher<? super Iterable<?>> containsEmpty = Contains.inAnyOrder();
 
         assertThat(containsEmpty, is(a_matcher_that_matches(emptyList)));
     }
 
     @Test public void
     matches_list_of_one_item() {
-        List<String> listOfOne = Arrays.<String>asList("a");
+        List<String> listOfOne = Arrays.asList("a");
 
-        Matcher<Iterable<String>> containsOne = Contains.inAnyOrder("a");
+        Matcher<? super Iterable<? extends String>> containsOne = Contains.inAnyOrder("a");
 
         assertThat(containsOne, is(a_matcher_that_matches(listOfOne)));
     }
@@ -187,8 +187,8 @@ public class ContainsInAnyOrderTest {
     @Test public void
     handles_and_reports_actual_null_values() {
 
-        Matcher<Iterable<String>> containsOneTwo = Contains.inAnyOrder("a", "b");
-        List<String> listOfOneNull = Arrays.<String>asList("a", null);
+        Matcher<? super Iterable<? extends String>> containsOneTwo = Contains.inAnyOrder("a", "b");
+        List<String> listOfOneNull = Arrays.asList("a", null);
 
         listOutput(containsOneTwo, listOfOneNull);
 
@@ -203,8 +203,8 @@ public class ContainsInAnyOrderTest {
     
     @Test public void
     handles_and_reports_extra_actual_null_values() {
-        Matcher<Iterable<String>> containsOneTwo = Contains.inAnyOrder("a", "b");
-        List<String> listOfOneTwoNull = Arrays.<String>asList("a", "b", null);
+        Matcher<? super Iterable<? extends String>> containsOneTwo = Contains.inAnyOrder("a", "b");
+        List<String> listOfOneTwoNull = Arrays.asList("a", "b", null);
 
         listOutput(containsOneTwo, listOfOneTwoNull);
 
@@ -218,16 +218,16 @@ public class ContainsInAnyOrderTest {
 
     @Test public void
     matches_on_null_elements_in_lists() {
-        Matcher<Iterable<String>> containsNull = Contains.inAnyOrder("a", null);
-        List<String> listNull = Arrays.<String>asList("a", null);
+        Matcher<? super Iterable<? extends String>> containsNull = Contains.inAnyOrder("a", null);
+        List<String> listNull = Arrays.asList("a", null);
 
         assertThat(containsNull, is(a_matcher_that_matches(listNull)));
     }
     
     @Test public void
     reports_when_null_element_was_expected_but_not_seen() {
-        Matcher<Iterable<String>> containsaNull = Contains.inAnyOrder("a", null);
-        List<String> listOfab = Arrays.<String>asList("a", "b");
+        Matcher<? super Iterable<? extends String>> containsaNull = Contains.inAnyOrder("a", null);
+        List<String> listOfab = Arrays.asList("a", "b");
 
         listOutput(containsaNull, listOfab);
 
@@ -242,8 +242,8 @@ public class ContainsInAnyOrderTest {
     
     @Test public void
     describes_possible_mismatch_when_only_one_unsatisfied_match_and_one_unexpected_item() {
-        Matcher<Iterable<String>> matcher = Contains.inAnyOrder("a", "b");
-        List<String> items = Arrays.<String>asList("b", "c");
+        Matcher<? super Iterable<? extends String>> matcher = Contains.inAnyOrder("a", "b");
+        List<String> items = Arrays.asList("b", "c");
         assertThat(matcher, is(not(a_matcher_that_matches(items))));
         assertThat(matcher, is(a_matcher_giving_a_mismatch_description_of(items, containsStringSequence("Possible mismatch between:", 
                                                                                                         "unsatisfied expectation <1> and unexpected <2>",
@@ -253,12 +253,12 @@ public class ContainsInAnyOrderTest {
     @SuppressWarnings("unchecked")
     @Test public void
     can_use_matchers_for_elements_in_list() {
-        Matcher<Iterable<String>> containsAB = Contains.inAnyOrder(Matchers.containsString("a"), Matchers.containsString("b"));
-        List<String> listOfAAABBB = Arrays.<String>asList("aaaaaa", "bbbbbbbbbb");
+        Matcher<? super Iterable<? extends String>> containsAB = Contains.inAnyOrder(Matchers.containsString("a"), Matchers.containsString("b"));
+        List<String> listOfAAABBB = Arrays.asList("aaaaaa", "bbbbbbbbbb");
         assertThat(containsAB, is(a_matcher_that_matches(listOfAAABBB)));
     }
     
-    private void listOutput(Matcher<Iterable<String>> containsOne, List<String> emptyList) {
+    private <T> void listOutput(Matcher<? super Iterable<? extends T>> containsOne, List<T> emptyList) {
         StringDescription description = new StringDescription();
         containsOne.describeTo(description);
         StringDescription mismatchDescription = new StringDescription();

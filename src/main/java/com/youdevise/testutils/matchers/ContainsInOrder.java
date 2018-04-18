@@ -2,6 +2,8 @@ package com.youdevise.testutils.matchers;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -9,13 +11,13 @@ import org.hamcrest.Matchers;
 public class ContainsInOrder<T> extends CollectionMatcher<T> {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public ContainsInOrder(List<Matcher<? super T>> expected) {
-        super(expected, (expected == null || expected.size() == 0) ? (Matcher)Matchers.emptyIterable() : (Matcher)Matchers.contains(expected));
+    public ContainsInOrder(List<? extends Matcher<? super T>> expected) {
+        super(expected, (expected == null || expected.size() == 0) ? Matchers.emptyIterable() : Matchers.contains((List<Matcher<? super T>>) expected));
     }
 
     @Override
-    protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, List<Matcher<? super T>> expected) {
-        List<T> actualList = listOf(actual);
+    protected void diagnoseFailures(Iterable<? extends T> actual, Description mismatchDescription, List<? extends Matcher<? super T>> expected) {
+        List<T> actualList = Lists.newArrayList(actual);
 
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
@@ -41,7 +43,7 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
         describeNonCorrespondances(mismatchDescription, actualList, expected);
     }
 
-    private void describeNonCorrespondances(Description mismatchDescription, List<T> actualList, List<Matcher<? super T>> expected) {
+    private void describeNonCorrespondances(Description mismatchDescription, List<T> actualList, List<? extends Matcher<? super T>> expected) {
         boolean first = true;
         for (int i = 0; i < Math.min(expected.size(), actualList.size()); i++) {
             if (itemsDontCorrespond(actualList.get(i), expected.get(i))) {

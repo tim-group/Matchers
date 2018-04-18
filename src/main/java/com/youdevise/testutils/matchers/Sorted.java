@@ -7,45 +7,45 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.google.common.collect.Ordering;
 
-public class Sorted<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
+public class Sorted<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends T>> {
 
     public static final String ASCENDING = "ascending";
     public static final String DESCENDING = "descending";
     public static final String CUSTOM = "custom";
     
     public static <T extends Comparable<T>> Sorted<T> inAscendingOrder() {
-        Ordering<T> ordering = Ordering.natural();
+        Ordering<? super T> ordering = Ordering.natural();
         return with(ordering, ASCENDING);
     }
     
     public static <T extends Comparable<T>> Sorted<T> inDescendingOrder() {
-        Ordering<T> ordering = Ordering.natural().reverse();
+        Ordering<? super T> ordering = Ordering.natural().reverse();
         return with(ordering, DESCENDING);
     }
     
-    public static <T> Sorted<T> with(Comparator<T> comparator) {
+    public static <T> Sorted<T> with(Comparator<? super T> comparator) {
         return with(comparator, CUSTOM);
     }
     
-    public static <T> Sorted<T> with(Comparator<T> comparator, String orderType) {
+    public static <T> Sorted<T> with(Comparator<? super T> comparator, String orderType) {
         if (comparator instanceof Ordering) {
-            return with((Ordering<T>) comparator, orderType);
+            return with(comparator, orderType);
         }
         return with(Ordering.from(comparator), orderType);
     }
     
-    public static <T> Sorted<T> with(Ordering<T> ordering) {
+    public static <T> Sorted<T> with(Ordering<? super T> ordering) {
         return with(ordering, CUSTOM);
     }
     
-    public static <T> Sorted<T> with(Ordering<T> ordering, String orderType) {
-        return new Sorted<T>(ordering, orderType);
+    public static <T> Sorted<T> with(Ordering<? super T> ordering, String orderType) {
+        return new Sorted<>(ordering, orderType);
     }
     
     private final String orderType;
-    private final Ordering<T> ordering;
+    private final Ordering<? super T> ordering;
     
-    private Sorted(Ordering<T> ordering, String orderType) {
+    private Sorted(Ordering<? super T> ordering, String orderType) {
         this.ordering = ordering;
         this.orderType = orderType;
     }
@@ -56,7 +56,7 @@ public class Sorted<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
     }
 
     @Override
-    protected boolean matchesSafely(Iterable<T> item, Description mismatchDescription) {
+    protected boolean matchesSafely(Iterable<? extends T> item, Description mismatchDescription) {
         if (ordering.isOrdered(item)) {
             return true;
         }

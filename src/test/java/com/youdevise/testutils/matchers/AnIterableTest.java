@@ -3,6 +3,7 @@ package com.youdevise.testutils.matchers;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
@@ -145,6 +146,7 @@ public class AnIterableTest {
                            containsString("an iterable in ascending order was not in order")));
     }
     
+/*
     @Test public void
     example_for_documentation() {
         Collection<Object> aCollectionOfFineMusicians = newArrayList();;
@@ -160,4 +162,5 @@ public class AnIterableTest {
         
         assertThat(aCollectionOfFineMusicians, AnIterable.of(String.class).withoutContents());
     }
+*/
 }
