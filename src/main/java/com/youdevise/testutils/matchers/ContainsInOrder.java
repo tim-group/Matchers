@@ -22,8 +22,7 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
             mismatchDescription.appendText("the actual collection was empty ");
             return;
         }
-        //noinspection unchecked
-        if (Matchers.containsInAnyOrder((List<Matcher<? super T>>) expected).matches(actual)) {
+        if (containsInAnyOrder(expected).matches(actual)) {
             mismatchDescription.appendText("actual list had the right items but in the wrong order! ");
         }
         if (actualList.size() < expected.size())  {
@@ -41,6 +40,11 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
             }
         }
         describeNonCorrespondances(mismatchDescription, actualList, expected);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Matcher<Iterable<? extends T>> containsInAnyOrder(List<? extends Matcher<? super T>> expected) {
+        return Matchers.containsInAnyOrder((List<Matcher<? super T>>) expected);
     }
 
     private void describeNonCorrespondances(Description mismatchDescription, List<T> actualList, List<? extends Matcher<? super T>> expected) {

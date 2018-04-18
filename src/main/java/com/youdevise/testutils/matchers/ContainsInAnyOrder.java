@@ -1,14 +1,14 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.hamcrest.core.AnyOf;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
 
@@ -53,12 +53,16 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
     private List<Integer> unexpectedIndices(List<? extends T> actualList, List<? extends Matcher<? super T>> expected) {
         final List<Integer> unexpected = new ArrayList<>();
         for (int i = 0; i < actualList.size(); i++) {
-            //noinspection unchecked
-            if (!Matchers.anyOf((List<Matcher<? super T>>) expected).matches(actualList.get(i))) {
+            if (!anyOf(expected).matches(actualList.get(i))) {
                 unexpected.add(i);
             }
         }
         return unexpected;
+    }
+
+    @SuppressWarnings("unchecked")
+    private AnyOf<T> anyOf(List<? extends Matcher<? super T>> expected) {
+        return Matchers.anyOf((List<Matcher<? super T>>) expected);
     }
 
     private void describeSingleMismatch(Description mismatchDescription,
