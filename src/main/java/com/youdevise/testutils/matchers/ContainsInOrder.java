@@ -1,12 +1,11 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.List;
-
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+
+import java.util.List;
 
 public class ContainsInOrder<T> extends CollectionMatcher<T> {
 
@@ -23,7 +22,8 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
             mismatchDescription.appendText("the actual collection was empty ");
             return;
         }
-        if (Matchers.containsInAnyOrder(expected).matches(actual)) {
+        //noinspection unchecked
+        if (Matchers.containsInAnyOrder((List<Matcher<? super T>>) expected).matches(actual)) {
             mismatchDescription.appendText("actual list had the right items but in the wrong order! ");
         }
         if (actualList.size() < expected.size())  {
