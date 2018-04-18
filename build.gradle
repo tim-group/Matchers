@@ -35,12 +35,12 @@ allprojects {
         options.incremental = true
         options.deprecation = true
         options.compilerArgs << "-parameters"
+        options.compilerArgs << "-Xlint:unchecked"
     }
 
     repositories {
         maven {
-            name "nexus"
-            url "${project.repoUrl}/groups/public"
+            url = "$repoUrl/groups/public"
         }
     }
 
@@ -49,7 +49,7 @@ allprojects {
     publishing {
         repositories {
             maven {
-                url "${project.repoUrl}/repositories/yd-release-candidates"
+                url "$repoUrl/repositories/yd-release-candidates"
                 credentials {
                     username = project.repoUsername
                     password = project.repoPassword
@@ -73,6 +73,8 @@ allprojects {
         classifier = 'sources'
         from sourceSets.main.allSource
     }
+
+    assemble.dependsOn(sourcesJar)
 }
 
 dependencies {
