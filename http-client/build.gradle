@@ -4,7 +4,7 @@ ext {
 
 dependencies {
     api project(":")
-    api 'org.apache.httpcomponents:httpclient:4.5.2'
+    api 'org.apache.httpcomponents:httpcore:4.4.4'
     api "dom4j:dom4j:1.6.1"
     api "xom:xom:1.2.5"
 
