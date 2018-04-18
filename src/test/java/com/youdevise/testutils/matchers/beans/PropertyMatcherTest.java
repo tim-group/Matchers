@@ -3,15 +3,16 @@ package com.youdevise.testutils.matchers.beans;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_with_description;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.either;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 public class PropertyMatcherTest {
 
@@ -154,10 +155,14 @@ public class PropertyMatcherTest {
         PropertyMatcher matcher = PropertyMatcher.an_object_with_property("password", equalTo("sausages"));
 
         assertThat(matcher, is(a_matcher_giving_a_mismatch_description_of(value,
-                                   equalTo("whose \"password\" field could not be read, due to:<java.lang.IllegalAccessException: " +
-                                              "Class com.youdevise.testutils.matchers.beans.PropertyMatcher can not access a member " +
-                                              "of class com.youdevise.testutils.matchers.beans.PropertyMatcherTest$DummyStruct " +
-                                              "with modifiers \"private final\">"))));
+                                   either(equalToIgnoringCase("whose \"password\" field could not be read, due to:<java.lang.IllegalAccessException: " +
+                                           "Class com.youdevise.testutils.matchers.beans.PropertyMatcher can not access a member " +
+                                           "of class com.youdevise.testutils.matchers.beans.PropertyMatcherTest$DummyStruct " +
+                                           "with modifiers \"private final\">"))
+                                    .or(equalToIgnoringCase("whose \"password\" field could not be read, due to:<java.lang.IllegalAccessException: " +
+                                            "Class com.youdevise.testutils.matchers.beans.PropertyMatcher cannot access a member " +
+                                            "of class com.youdevise.testutils.matchers.beans.PropertyMatcherTest$DummyStruct " +
+                                            "with modifiers \"private final\">")))));
     }
 
     @Test public void
