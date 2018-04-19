@@ -3,7 +3,6 @@ package com.youdevise.testutils.matchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -11,16 +10,16 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.google.common.collect.Iterables;
 
-public class ContainsTheItems<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends T>> {
+public class ContainsTheItems<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
 
     private final Matcher<Iterable<T>> contains;
-    private final List<? extends Matcher<? super T>> expected;
+    private final List<Matcher<? super T>> expected;
 
-    public ContainsTheItems(List<? extends Matcher<? super T>> expected) {
+    public ContainsTheItems(List<Matcher<? super T>> expected) {
         this.expected = expected;
         @SuppressWarnings("unchecked")
         Matcher<? super T>[] expectedArray = Iterables.toArray(expected, Matcher.class);
-        contains = Matchers.hasItems(expectedArray);
+        contains = Matchers.<T>hasItems(expectedArray);
     }
 
     @Override
@@ -29,21 +28,28 @@ public class ContainsTheItems<T> extends TypeSafeDiagnosingMatcher<Iterable<? ex
     }
 
     @Override
-    protected boolean matchesSafely(Iterable<? extends T> actual, Description mismatchDescription) {
-        List<T> actualList = ImmutableList.copyOf(actual);
-        diagnoseFailures(actualList, mismatchDescription);
+    protected boolean matchesSafely(Iterable<T> actual, Description mismatchDescription) {
+        List<T> actualList = new ArrayList<T>();
+        for (T t : actual) {
+            actualList.add(t);
+        }
+        diagnoseFailures(actual, mismatchDescription);
         mismatchDescription.appendText("\n\tComplete actual iterable: ").appendValue(actualList);
         return contains.matches(actual);
     }
 
-    private void diagnoseFailures(List<? extends T> actual, Description mismatchDescription) {
-        if (actual.isEmpty()) {
+    private void diagnoseFailures(Iterable<T> actual, Description mismatchDescription) {
+        List<T> actualList = new ArrayList<T>();
+        for (T t : actual) {
+            actualList.add(t);
+        }
+        if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
             return;
         }
         boolean first = true;
         for (int i = 0; i < expected.size(); i++) {
-            if (!Matchers.hasItem(expected.get(i)).matches(actual)) {
+            if (!Matchers.hasItem(expected.get(i)).matches(actualList)) {
                 if (first) {
                     mismatchDescription.appendText("\n\tItems that were expected, but not present: ");
                     first = false;

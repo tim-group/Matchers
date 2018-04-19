@@ -3,19 +3,18 @@ package com.youdevise.testutils.matchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-public class ContainsTheItem<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends T>> {
+public class ContainsTheItem<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
     private final Matcher<Iterable<? super T>> contains;
     private final Matcher<? super T> expected;
 
     public ContainsTheItem(Matcher<? super T> expected) {
         this.expected = expected;
-        contains = Matchers.hasItem(expected);
+        contains = Matchers.<T>hasItem(expected);
     }
 
     @Override
@@ -24,14 +23,21 @@ public class ContainsTheItem<T> extends TypeSafeDiagnosingMatcher<Iterable<? ext
     }
 
     @Override
-    protected boolean matchesSafely(Iterable<? extends T> actual, Description mismatchDescription) {
-        List<T> actualList = ImmutableList.copyOf(actual);
-        diagnoseFailures(actualList, mismatchDescription);
+    protected boolean matchesSafely(Iterable<T> actual, Description mismatchDescription) {
+        List<T> actualList = new ArrayList<T>();
+        for (T t : actual) {
+            actualList.add(t);
+        }
+        diagnoseFailures(actual, mismatchDescription);
         mismatchDescription.appendText("\n\tComplete actual iterable: ").appendValue(actualList);
         return contains.matches(actual);
     }
 
-    private void diagnoseFailures(List<? extends T> actualList, Description mismatchDescription) {
+    private void diagnoseFailures(Iterable<T> actual, Description mismatchDescription) {
+        List<T> actualList = new ArrayList<T>();
+        for (T t : actual) {
+            actualList.add(t);
+        }
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
             return;

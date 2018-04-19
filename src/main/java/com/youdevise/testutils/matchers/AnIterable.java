@@ -12,10 +12,10 @@ import com.google.common.collect.Ordering;
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 
-public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends T>> {
+public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? super T>> {
     
     public static <T> AnIterable<T> of(Class<T> klass) {
-        return new AnIterable<>(klass);
+        return new AnIterable<T>(klass);
     }
     
     private final Class<T> klass;
@@ -24,17 +24,16 @@ public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends 
         this.klass = klass;
     }
     
-    public AnIterableWhich<T> which(Matcher<? super Iterable<? extends T>> matcher) {
-        return new AnIterableWhich<>(this, matcher);
+    public AnIterableWhich<T> which(Matcher<Iterable<T>> matcher) {
+        return new AnIterableWhich<T>(this, matcher);
     }
     
     @Override
     public void describeTo(Description description) {
         description.appendText("an iterable of ").appendText(klass.getName());
     }
-
     @Override
-    protected boolean matchesSafely(Iterable<? extends T> item, Description mismatchDescription) {
+    protected boolean matchesSafely(Iterable<? super T> item, Description mismatchDescription) {
         if (Iterables.any(item, not(instanceOf(klass)))) {
             mismatchDescription.appendText("not all elements were instances of ").appendText(klass.getName());
             return false;
@@ -43,19 +42,19 @@ public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends 
     }
     
     public AnIterableWhich<T> withoutDuplicates() {
-        return new AnIterableWhich<>(this, new WithoutDuplicatesMatcher<>());
+        return new AnIterableWhich<T>(this, new WithoutDuplicatesMatcher<T>());
     }
     
     public AnIterableWhich<T> withoutContents() {
-        return new AnIterableWhich<>(this, new IsEmptyMatcher<>());
+        return new AnIterableWhich<T>(this, new IsEmptyMatcher<T>());
     }
 
     public AnIterableWhich<T> inAscendingOrder() {
-        return new AnIterableWhich<>(this, Sorted.with(getNaturalOrdering(), Sorted.ASCENDING));
+        return new AnIterableWhich<T>(this, Sorted.with(getNaturalOrdering(), Sorted.ASCENDING));
     }
     
     public AnIterableWhich<T> inDescendingOrder() {
-        return new AnIterableWhich<>(this, Sorted.with(getNaturalOrdering().reverse(), Sorted.DESCENDING));
+        return new AnIterableWhich<T>(this, Sorted.with(getNaturalOrdering().reverse(), Sorted.DESCENDING));
     }
     
     public AnIterableWhich<T> inSortedOrder(Comparator<T> comparator) {
@@ -63,7 +62,7 @@ public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends 
     }
     
     public AnIterableWhich<T> inSortedOrder(Comparator<T> comparator, String orderType) {
-        return new AnIterableWhich<>(this, Sorted.with(comparator, orderType));
+        return new AnIterableWhich<T>(this, Sorted.with(comparator, orderType));
     }
     
     public AnIterableWhich<T> inSortedOrder(Ordering<T> ordering) {
@@ -71,7 +70,7 @@ public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends 
     }
     
     public AnIterableWhich<T> inSortedOrder(Ordering<T> ordering, String orderType) {
-        return new AnIterableWhich<>(this, Sorted.with(ordering, orderType));
+        return new AnIterableWhich<T>(this, Sorted.with(ordering, orderType));
     }
     
     private Ordering<T> getNaturalOrdering() {

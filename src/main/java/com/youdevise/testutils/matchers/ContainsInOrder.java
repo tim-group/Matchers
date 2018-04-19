@@ -1,28 +1,27 @@
 package com.youdevise.testutils.matchers;
 
-import com.google.common.collect.Lists;
+import java.util.List;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
-import java.util.List;
-
 public class ContainsInOrder<T> extends CollectionMatcher<T> {
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public ContainsInOrder(List<? extends Matcher<? super T>> expected) {
-        super(expected, (expected == null || expected.size() == 0) ? Matchers.emptyIterable() : Matchers.contains((List<Matcher<? super T>>) expected));
+    public ContainsInOrder(List<Matcher<? super T>> expected) {
+        super(expected, (expected == null || expected.size() == 0) ? (Matcher)Matchers.emptyIterable() : (Matcher)Matchers.contains(expected));
     }
 
     @Override
-    protected void diagnoseFailures(Iterable<? extends T> actual, Description mismatchDescription, List<? extends Matcher<? super T>> expected) {
-        List<T> actualList = Lists.newArrayList(actual);
+    protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, List<Matcher<? super T>> expected) {
+        List<T> actualList = listOf(actual);
 
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
             return;
         }
-        if (containsInAnyOrder(expected).matches(actual)) {
+        if (Matchers.containsInAnyOrder(expected).matches(actual)) {
             mismatchDescription.appendText("actual list had the right items but in the wrong order! ");
         }
         if (actualList.size() < expected.size())  {
@@ -42,12 +41,7 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
         describeNonCorrespondances(mismatchDescription, actualList, expected);
     }
 
-    @SuppressWarnings("unchecked")
-    private Matcher<Iterable<? extends T>> containsInAnyOrder(List<? extends Matcher<? super T>> expected) {
-        return Matchers.containsInAnyOrder((List<Matcher<? super T>>) expected);
-    }
-
-    private void describeNonCorrespondances(Description mismatchDescription, List<T> actualList, List<? extends Matcher<? super T>> expected) {
+    private void describeNonCorrespondances(Description mismatchDescription, List<T> actualList, List<Matcher<? super T>> expected) {
         boolean first = true;
         for (int i = 0; i < Math.min(expected.size(), actualList.size()); i++) {
             if (itemsDontCorrespond(actualList.get(i), expected.get(i))) {

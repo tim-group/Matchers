@@ -15,9 +15,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.youdevise.testutils.matchers.ContainsInAnyOrder;
-import com.youdevise.testutils.matchers.ContainsInOrder;
-import com.youdevise.testutils.matchers.ContainsTheItem;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -35,6 +32,9 @@ import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 
 public final class JsonStructureMatchers {
     @SuppressWarnings("unchecked")
@@ -443,7 +443,7 @@ public final class JsonStructureMatchers {
             if (nodeMatchers.length == 0) {
                 contentsMatcher = emptyIterable();
             } else {
-                contentsMatcher = new ContainsInOrder<T>(ImmutableList.copyOf(nodeMatchers));
+                contentsMatcher = contains(ImmutableList.copyOf(nodeMatchers));
             }
             return this;
         }
@@ -452,25 +452,25 @@ public final class JsonStructureMatchers {
             if (nodeMatchers.isEmpty()) {
                 contentsMatcher = emptyIterable();
             } else {
-                contentsMatcher = new ContainsInOrder<T>(ImmutableList.copyOf(nodeMatchers));
+                contentsMatcher = contains(ImmutableList.copyOf(nodeMatchers));
             }
             return this;
         }
 
         @SafeVarargs
         final public <T extends JsonNode> ArrayNodeMatcher inAnyOrder(Matcher<? super T>... nodeMatchers) {
-            contentsMatcher = new ContainsInAnyOrder<T>(ImmutableList.copyOf(nodeMatchers));
+            contentsMatcher = containsInAnyOrder(ImmutableList.copyOf(nodeMatchers));
             return this;
         }
 
         public <T extends JsonNode> ArrayNodeMatcher including(final Matcher<? super T> nodeMatcher) {
-            contentsMatcher = new ContainsTheItem<T>(nodeMatcher);
+            contentsMatcher = hasItem(nodeMatcher);
             return this;
         }
 
         @SafeVarargs
         final public <T extends JsonNode> ArrayNodeMatcher startingWith(Matcher<? super T>... nodeMatchers) {
-            contentsMatcher = prefix(nodeMatchers.length, new ContainsInAnyOrder<T>(ImmutableList.copyOf(nodeMatchers)));
+            contentsMatcher = prefix(nodeMatchers.length, containsInAnyOrder(ImmutableList.copyOf(nodeMatchers)));
             return this;
         }
     }
