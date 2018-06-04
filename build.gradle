@@ -46,6 +46,13 @@ allprojects {
 
     apply plugin: 'maven-publish'
 
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    assemble.dependsOn(sourcesJar)
+
     publishing {
         repositories {
             maven {
@@ -68,13 +75,6 @@ allprojects {
             }
         }
     }
-
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    assemble.dependsOn(sourcesJar)
 }
 
 dependencies {

@@ -1,3 +1,5 @@
 rootProject.name = 'Matchers'
 
 include 'http-client'
+
+enableFeaturePreview('STABLE_PUBLISHING')
