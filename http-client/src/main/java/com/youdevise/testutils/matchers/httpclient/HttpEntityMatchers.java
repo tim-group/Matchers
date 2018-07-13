@@ -1,11 +1,7 @@
 package com.youdevise.testutils.matchers.httpclient;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Formatter;
-
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.MappingJsonFactory;
 import com.google.common.io.ByteProcessor;
@@ -20,6 +16,12 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Formatter;
+
 import static com.youdevise.testutils.matchers.httpclient.ContentTypeMatchers.mimeType;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.hamcrest.Matchers.any;
@@ -27,11 +29,14 @@ import static org.hamcrest.Matchers.either;
 import static org.hamcrest.Matchers.equalTo;
 
 public final class HttpEntityMatchers {
+    private static final JsonFactory JSON_FACTORY = new MappingJsonFactory()
+            .enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION);
+
     public static <T extends TreeNode> Matcher<HttpEntity> json(Matcher<T> contentMatcher) {
         return new HttpContentMatcher<T>(mimeType(equalTo("application/json")), diagnoseJson(contentMatcher)) {
             @Override
             protected T doParse(HttpEntity item) throws IOException {
-                return new MappingJsonFactory().createParser(item.getContent()).readValueAsTree();
+                return JSON_FACTORY.createParser(item.getContent()).readValueAsTree();
             }
         };
     }
