@@ -18,6 +18,8 @@ import com.google.common.collect.Sets;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
+import org.hamcrest.collection.IsIterableContainingInOrder;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -32,8 +34,6 @@ import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.hamcrest.core.IsCollectionContaining.hasItem;
 
 public final class JsonStructureMatchers {
@@ -443,7 +443,7 @@ public final class JsonStructureMatchers {
             if (nodeMatchers.length == 0) {
                 contentsMatcher = emptyIterable();
             } else {
-                contentsMatcher = contains(ImmutableList.copyOf(nodeMatchers));
+                contentsMatcher = IsIterableContainingInOrder.<T> contains(ImmutableList.copyOf(nodeMatchers));
             }
             return this;
         }
@@ -452,14 +452,14 @@ public final class JsonStructureMatchers {
             if (nodeMatchers.isEmpty()) {
                 contentsMatcher = emptyIterable();
             } else {
-                contentsMatcher = contains(ImmutableList.copyOf(nodeMatchers));
+                contentsMatcher = IsIterableContainingInOrder.<T> contains(ImmutableList.copyOf(nodeMatchers));
             }
             return this;
         }
 
         @SafeVarargs
         final public <T extends JsonNode> ArrayNodeMatcher inAnyOrder(Matcher<? super T>... nodeMatchers) {
-            contentsMatcher = containsInAnyOrder(ImmutableList.copyOf(nodeMatchers));
+            contentsMatcher = IsIterableContainingInAnyOrder.<T> containsInAnyOrder(ImmutableList.copyOf(nodeMatchers));
             return this;
         }
 
@@ -470,7 +470,7 @@ public final class JsonStructureMatchers {
 
         @SafeVarargs
         final public <T extends JsonNode> ArrayNodeMatcher startingWith(Matcher<? super T>... nodeMatchers) {
-            contentsMatcher = prefix(nodeMatchers.length, containsInAnyOrder(ImmutableList.copyOf(nodeMatchers)));
+            contentsMatcher = prefix(nodeMatchers.length, IsIterableContainingInAnyOrder.<T> containsInAnyOrder(ImmutableList.copyOf(nodeMatchers)));
             return this;
         }
     }
