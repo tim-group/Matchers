@@ -32,7 +32,7 @@ public final class HttpEntityMatchers {
     private static final JsonFactory JSON_FACTORY = new MappingJsonFactory()
             .enable(JsonParser.Feature.STRICT_DUPLICATE_DETECTION);
 
-    public static <T extends TreeNode> Matcher<HttpEntity> json(Matcher<T> contentMatcher) {
+    public static <T extends TreeNode> Matcher<HttpEntity> json(Matcher<? super T> contentMatcher) {
         return new HttpContentMatcher<T>(mimeType(equalTo("application/json")), diagnoseJson(contentMatcher)) {
             @Override
             protected T doParse(HttpEntity item) throws IOException {
@@ -41,7 +41,7 @@ public final class HttpEntityMatchers {
         };
     }
 
-    public static Matcher<HttpEntity> validXml(Matcher<org.w3c.dom.Document> contentMatcher) {
+    public static Matcher<HttpEntity> validXml(Matcher<? super org.w3c.dom.Document> contentMatcher) {
         return new HttpContentMatcher<org.w3c.dom.Document>(mimeType(either(equalTo("application/xml")).or(equalTo("text/xml"))), contentMatcher) {
             @Override
             protected org.w3c.dom.Document doParse(HttpEntity item) throws IOException {
@@ -54,7 +54,7 @@ public final class HttpEntityMatchers {
         };
     }
 
-    public static Matcher<HttpEntity> validXmlDom4J(Matcher<org.dom4j.Document> contentMatcher) {
+    public static Matcher<HttpEntity> validXmlDom4J(Matcher<? super org.dom4j.Document> contentMatcher) {
         return new HttpContentMatcher<org.dom4j.Document>(mimeType(either(equalTo("application/xml")).or(equalTo("text/xml"))), contentMatcher) {
             @Override
             protected org.dom4j.Document doParse(HttpEntity item) throws IOException {
@@ -67,7 +67,7 @@ public final class HttpEntityMatchers {
         };
     }
 
-    public static Matcher<HttpEntity> validXmlXOM(Matcher<nu.xom.Document> contentMatcher) {
+    public static Matcher<HttpEntity> validXmlXOM(Matcher<? super nu.xom.Document> contentMatcher) {
         return new HttpContentMatcher<nu.xom.Document>(mimeType(either(equalTo("application/xml")).or(equalTo("text/xml"))), contentMatcher) {
             @Override
             protected nu.xom.Document doParse(HttpEntity item) throws IOException {
@@ -80,7 +80,7 @@ public final class HttpEntityMatchers {
         };
     }
 
-    public static Matcher<HttpEntity> html(Matcher<String> contentMatcher) {
+    public static Matcher<HttpEntity> html(Matcher<? super String> contentMatcher) {
         return new HttpContentMatcher<String>(mimeType(equalTo("text/html")), contentMatcher) {
             @Override
             protected String doParse(HttpEntity item) throws IOException {
@@ -89,7 +89,7 @@ public final class HttpEntityMatchers {
         };
     }
 
-    public static Matcher<HttpEntity> htmlInUtf8(Matcher<String> contentMatcher) {
+    public static Matcher<HttpEntity> htmlInUtf8(Matcher<? super String> contentMatcher) {
         return new HttpContentMatcher<String>(mimeType(equalTo("text/html")), contentMatcher) {
             @Override
             protected String doParse(HttpEntity item) throws IOException {
@@ -98,7 +98,7 @@ public final class HttpEntityMatchers {
         };
     }
 
-    public static Matcher<HttpEntity> plainText(Matcher<String> contentMatcher) {
+    public static Matcher<HttpEntity> plainText(Matcher<? super String> contentMatcher) {
         return new HttpContentMatcher<String>(mimeType(equalTo("text/plain")), contentMatcher) {
             @Override
             protected String doParse(HttpEntity item) throws Exception {
@@ -107,7 +107,7 @@ public final class HttpEntityMatchers {
         };
     }
 
-    public static Matcher<HttpEntity> plainTextInUtf8(Matcher<String> contentMatcher) {
+    public static Matcher<HttpEntity> plainTextInUtf8(Matcher<? super String> contentMatcher) {
         return new HttpContentMatcher<String>(mimeType(equalTo("text/plain")), contentMatcher) {
             @Override
             protected String doParse(HttpEntity item) throws IOException {
@@ -116,7 +116,7 @@ public final class HttpEntityMatchers {
         };
     }
 
-    public static Matcher<HttpEntity> contentType(final Matcher<ContentType> typeMatcher) {
+    public static Matcher<HttpEntity> contentType(final Matcher<? super ContentType> typeMatcher) {
         return new TypeSafeDiagnosingMatcher<HttpEntity>() {
             @Override
             protected boolean matchesSafely(HttpEntity item, Description mismatchDescription) {
@@ -137,7 +137,7 @@ public final class HttpEntityMatchers {
         };
     }
 
-    public static Matcher<HttpEntity> md5(Matcher<String> digestMatcher) {
+    public static Matcher<HttpEntity> md5(Matcher<? super String> digestMatcher) {
         return new HttpContentMatcher<String>(any(ContentType.class), digestMatcher) {
             @Override
             protected String doParse(HttpEntity item) throws IOException {
@@ -178,7 +178,7 @@ public final class HttpEntityMatchers {
         }
     };
 
-    private static <T extends TreeNode> Matcher<T> diagnoseJson(Matcher<T> contentMatcher) {
+    private static <T extends TreeNode> Matcher<T> diagnoseJson(Matcher<? super T> contentMatcher) {
         return new TypeSafeDiagnosingMatcher<T>() {
             @Override
             protected boolean matchesSafely(T item, Description mismatchDescription) {

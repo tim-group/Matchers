@@ -8,13 +8,13 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 public abstract class HttpContentMatcher<T> extends TypeSafeDiagnosingMatcher<HttpEntity> {
-    private final Matcher<ContentType> contentTypeMatcher;
-    private final Matcher<T> contentMatcher;
+    private final Matcher<? super ContentType> contentTypeMatcher;
+    private final Matcher<? super T> contentMatcher;
     private boolean parsed;
     private T parsedValue;
     private Exception parseException;
 
-    public HttpContentMatcher(Matcher<ContentType> contentTypeMatcher, Matcher<T> contentMatcher) {
+    public HttpContentMatcher(Matcher<? super ContentType> contentTypeMatcher, Matcher<? super T> contentMatcher) {
         this.contentTypeMatcher = contentTypeMatcher;
         this.contentMatcher = contentMatcher;
     }

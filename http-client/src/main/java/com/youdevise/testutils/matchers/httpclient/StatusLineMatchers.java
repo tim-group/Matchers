@@ -15,7 +15,7 @@ public final class StatusLineMatchers {
         return code(equalTo(code));
     }
 
-    public static Matcher<StatusLine> code(Matcher<Integer> codeMatcher) {
+    public static Matcher<StatusLine> code(Matcher<? super Integer> codeMatcher) {
         return new TypeSafeDiagnosingMatcher<StatusLine>() {
             @Override
             protected boolean matchesSafely(StatusLine item, Description mismatchDescription) {

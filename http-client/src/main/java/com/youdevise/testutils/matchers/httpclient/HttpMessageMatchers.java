@@ -17,7 +17,7 @@ public final class HttpMessageMatchers {
     private HttpMessageMatchers() {
     }
 
-    public static Matcher<HttpMessage> messageWithHeaders(final String headerName, final Matcher<Set<String>> valuesMatcher) {
+    public static Matcher<HttpMessage> messageWithHeaders(final String headerName, final Matcher<? super Set<String>> valuesMatcher) {
         return new TypeSafeDiagnosingMatcher<HttpMessage>() {
             @Override
             protected boolean matchesSafely(HttpMessage item, Description mismatchDescription) {
@@ -42,7 +42,7 @@ public final class HttpMessageMatchers {
         };
     }
 
-    public static Matcher<HttpMessage> messageWithSingleHeader(final String headerName, final Matcher<String> valueMatcher) {
+    public static Matcher<HttpMessage> messageWithSingleHeader(final String headerName, final Matcher<? super String> valueMatcher) {
         return new TypeSafeDiagnosingMatcher<HttpMessage>() {
             @Override
             protected boolean matchesSafely(HttpMessage item, Description mismatchDescription) {
@@ -86,7 +86,7 @@ public final class HttpMessageMatchers {
         };
     }
 
-    public static Matcher<HttpMessage> containsHeader(final Matcher<Header> matcher) {
+    public static Matcher<HttpMessage> containsHeader(final Matcher<? super Header> matcher) {
         return new TypeSafeDiagnosingMatcher<HttpMessage>() {
             @Override
             protected boolean matchesSafely(HttpMessage item, Description mismatchDescription) {

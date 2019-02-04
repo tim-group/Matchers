@@ -15,7 +15,7 @@ public final class ContentTypeMatchers {
         return mimeType(equalToIgnoringCase(type));
     }
 
-    public static Matcher<ContentType> mimeType(Matcher<String> matcher) {
+    public static Matcher<ContentType> mimeType(Matcher<? super String> matcher) {
         return new TypeSafeDiagnosingMatcher<ContentType>() {
             @Override
             protected boolean matchesSafely(ContentType item, Description mismatchDescription) {

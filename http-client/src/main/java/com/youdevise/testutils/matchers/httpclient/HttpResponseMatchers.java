@@ -56,15 +56,15 @@ public final class HttpResponseMatchers {
         return statusCode(SC_BAD_REQUEST);
     }
 
-    public static Matcher<HttpResponse> movedTemporarilyTo(Matcher<URI> targetMatcher) {
+    public static Matcher<HttpResponse> movedTemporarilyTo(Matcher<? super URI> targetMatcher) {
         return redirectTo(equalTo(SC_MOVED_TEMPORARILY), targetMatcher);
     }
 
-    public static Matcher<HttpResponse> movedPermanentlyTo(Matcher<URI> targetMatcher) {
+    public static Matcher<HttpResponse> movedPermanentlyTo(Matcher<? super URI> targetMatcher) {
         return redirectTo(equalTo(SC_MOVED_PERMANENTLY), targetMatcher);
     }
 
-    public static Matcher<HttpResponse> temporaryRedirectTo(Matcher<URI> targetMatcher) {
+    public static Matcher<HttpResponse> temporaryRedirectTo(Matcher<? super URI> targetMatcher) {
         return redirectTo(equalTo(SC_TEMPORARY_REDIRECT), targetMatcher);
     }
 
@@ -76,11 +76,11 @@ public final class HttpResponseMatchers {
         return status(StatusLineMatchers.code(code));
     }
 
-    public static Matcher<HttpResponse> statusCode(Matcher<Integer> codeMatcher) {
+    public static Matcher<HttpResponse> statusCode(Matcher<? super Integer> codeMatcher) {
         return status(StatusLineMatchers.code(codeMatcher));
     }
 
-    public static Matcher<HttpResponse> status(Matcher<StatusLine> statusMatcher) {
+    public static Matcher<HttpResponse> status(Matcher<? super StatusLine> statusMatcher) {
         return new TypeSafeDiagnosingMatcher<HttpResponse>() {
             @Override
             protected boolean matchesSafely(HttpResponse item, Description mismatchDescription) {
@@ -112,7 +112,7 @@ public final class HttpResponseMatchers {
         };
     }
 
-    public static Matcher<HttpResponse> redirectTo(Matcher<Integer> codeMatcher, Matcher<URI> targetMatcher) {
+    public static Matcher<HttpResponse> redirectTo(Matcher<? super Integer> codeMatcher, Matcher<? super URI> targetMatcher) {
         return new TypeSafeDiagnosingMatcher<HttpResponse>() {
             @Override
             protected boolean matchesSafely(HttpResponse item, Description mismatchDescription) {
@@ -144,15 +144,15 @@ public final class HttpResponseMatchers {
         };
     }
 
-    public static <T extends TreeNode> Matcher<HttpResponse> jsonContent(Matcher<T> contentMatcher) {
+    public static <T extends TreeNode> Matcher<HttpResponse> jsonContent(Matcher<? super T> contentMatcher) {
         return content(json(contentMatcher));
     }
 
-    public static Matcher<HttpResponse> xmlContent(Matcher<Document> contentMatcher) {
+    public static Matcher<HttpResponse> xmlContent(Matcher<? super Document> contentMatcher) {
         return content(validXmlDom4J(contentMatcher));
     }
 
-    public static Matcher<HttpResponse> htmlInUtf8Content(Matcher<String> contentMatcher) {
+    public static Matcher<HttpResponse> htmlInUtf8Content(Matcher<? super String> contentMatcher) {
         return content(htmlInUtf8(contentMatcher));
     }
 }

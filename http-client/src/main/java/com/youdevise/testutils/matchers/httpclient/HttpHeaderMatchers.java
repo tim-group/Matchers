@@ -12,7 +12,7 @@ public final class HttpHeaderMatchers {
     private HttpHeaderMatchers() {
     }
 
-    public static Matcher<Header> newCookie(final String name, final Matcher<String> valueMatcher, final Matcher<String> pathMatcher) {
+    public static Matcher<Header> newCookie(final String name, final Matcher<? super String> valueMatcher, final Matcher<? super String> pathMatcher) {
         return singleCookie(new TypeSafeDiagnosingMatcher<HttpCookie>() {
             @Override
             protected boolean matchesSafely(HttpCookie item, Description mismatchDescription) {
@@ -77,7 +77,7 @@ public final class HttpHeaderMatchers {
         };
     }
 
-    public static Matcher<Header> singleCookie(final Matcher<HttpCookie> cookieMatcher) {
+    public static Matcher<Header> singleCookie(final Matcher<? super HttpCookie> cookieMatcher) {
         return new TypeSafeDiagnosingMatcher<Header>() {
             @Override
             protected boolean matchesSafely(Header item, Description mismatchDescription) {
