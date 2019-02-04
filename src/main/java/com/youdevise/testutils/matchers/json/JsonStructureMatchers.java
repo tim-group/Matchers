@@ -23,7 +23,6 @@ import org.hamcrest.collection.IsIterableContainingInOrder;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -417,17 +416,9 @@ public final class JsonStructureMatchers {
 
         @Override
         protected boolean matchesSafely(final ArrayNode item, Description mismatchDescription) {
-            Iterable<JsonNode> iterable = new Iterable<JsonNode>() {
-                @Override
-                public Iterator<JsonNode> iterator() {
-                    return item.elements();
-                }
-            };
-            if (!contentsMatcher.matches(iterable)) {
-                contentsMatcher.describeMismatch(iterable, mismatchDescription);
-                return false;
-            }
-            return true;
+            Iterable<JsonNode> iterable = item::elements;
+            contentsMatcher.describeMismatch(iterable, mismatchDescription);
+            return contentsMatcher.matches(iterable);
         }
 
         @Override
