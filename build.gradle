@@ -53,24 +53,26 @@ allprojects {
 
     assemble.dependsOn(sourcesJar)
 
-    publishing {
-        repositories {
-            maven {
-                url "$repoUrl/repositories/yd-release-candidates"
-                credentials {
-                    username = project.repoUsername
-                    password = project.repoPassword
+    afterEvaluate {
+        publishing {
+            repositories {
+                maven {
+                    url "$repoUrl/repositories/yd-release-candidates"
+                    credentials {
+                        username = project.repoUsername
+                        password = project.repoPassword
+                    }
                 }
             }
-        }
-        publications {
-            mavenJava(MavenPublication) {
-                artifactId project.ext.has('artifactId') ? project.ext.artifactId
-                        : project == rootProject ? project.name
-                        : rootProject.name + "-" + project.name
-                from components.java
-                artifact(sourcesJar) {
-                    classifier "sources"
+            publications {
+                mavenJava(MavenPublication) {
+                    artifactId project.ext.has('artifactId') ? project.ext.artifactId
+                            : project == rootProject ? project.name
+                            : rootProject.name + "-" + project.name
+                    from components.java
+                    artifact(sourcesJar) {
+                        classifier "sources"
+                    }
                 }
             }
         }
