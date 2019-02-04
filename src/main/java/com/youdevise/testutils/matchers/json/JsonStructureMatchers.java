@@ -37,15 +37,15 @@ import static org.hamcrest.core.IsCollectionContaining.hasItem;
 
 public final class JsonStructureMatchers {
     @SuppressWarnings("unchecked")
-    public static Matcher<JsonNode> jacksonTree(Matcher<? extends JsonNode> matcher) {
+    public static <N extends JsonNode> Matcher<JsonNode> jacksonTree(Matcher<? super N> matcher) {
         return (Matcher<JsonNode>) matcher;
     }
 
-    public static abstract class JsonRepresentationMatcher<T> extends TypeSafeDiagnosingMatcher<T> {
+    public static abstract class JsonRepresentationMatcher<T, N extends JsonNode> extends TypeSafeDiagnosingMatcher<T> {
         private final Matcher<String> jsonMatcher;
 
-        public JsonRepresentationMatcher(Matcher<? extends JsonNode> matcher) {
-            jsonMatcher = json(matcher);
+        public JsonRepresentationMatcher(Matcher<? super N> matcher) {
+            jsonMatcher = JsonStructureMatchers.<N> json(matcher);
         }
 
         @Override
@@ -63,9 +63,9 @@ public final class JsonStructureMatchers {
         protected abstract String jsonToString(T item);
     }
 
-    public static <T> JsonRepresentationMatcher<T> makesJsonStructuredAs(Function<? super T, String> toJson,
-                                                                         Matcher<? extends JsonNode> matcher) {
-        return new JsonRepresentationMatcher<T>(matcher) {
+    public static <T, N extends JsonNode> JsonRepresentationMatcher<T, ?> makesJsonStructuredAs(Function<? super T, String> toJson,
+                                                                         Matcher<? super N> matcher) {
+        return new JsonRepresentationMatcher<T, N>(matcher) {
             @Override
             protected String jsonToString(T item) {
                 return toJson.apply(item);
@@ -73,7 +73,7 @@ public final class JsonStructureMatchers {
         };
     }
 
-    public static Matcher<String> json(final Matcher<? extends JsonNode> matcher) {
+    public static <N extends JsonNode> Matcher<String> json(final Matcher<? super N> matcher) {
         return new TypeSafeDiagnosingMatcher<String>() {
             @Override
             protected boolean matchesSafely(String item, Description mismatchDescription) {
@@ -95,7 +95,7 @@ public final class JsonStructureMatchers {
         };
     }
 
-    public static Matcher<byte[]> jsonBytes(final Matcher<? extends JsonNode> matcher) {
+    public static <N extends JsonNode> Matcher<byte[]> jsonBytes(final Matcher<? super N> matcher) {
         return new TypeSafeDiagnosingMatcher<byte[]>() {
             @Override
             protected boolean matchesSafely(byte[] item, Description mismatchDescription) {
@@ -126,14 +126,14 @@ public final class JsonStructureMatchers {
     }
 
     public static class ObjectNodeMatcher extends TypeSafeDiagnosingMatcher<ObjectNode> {
-        private final Map<String, Matcher<? extends JsonNode>> propertyMatchers = Maps.newLinkedHashMap();
+        private final Map<String, Matcher<?>> propertyMatchers = Maps.newLinkedHashMap();
         private final Set<String> excludedProperties = Sets.newHashSet();
         private boolean failOnUnexpectedProperties = true;
 
         @Override
         protected boolean matchesSafely(ObjectNode item, Description mismatchDescription) {
             Set<String> remainingFieldNames = Sets.newHashSet(item.fieldNames());
-            for (Map.Entry<String, Matcher<? extends JsonNode>> e : propertyMatchers.entrySet()) {
+            for (Map.Entry<String, Matcher<?>> e : propertyMatchers.entrySet()) {
                 if (!item.has(e.getKey())) {
                     mismatchDescription.appendText(e.getKey()).appendText(" was not present");
                     return false;
@@ -163,7 +163,7 @@ public final class JsonStructureMatchers {
         public void describeTo(Description description) {
             description.appendText("{ ");
             boolean first = true;
-            for (Map.Entry<String, Matcher<? extends JsonNode>> e : propertyMatchers.entrySet()) {
+            for (Map.Entry<String, Matcher<?>> e : propertyMatchers.entrySet()) {
                 if (first) {
                     first = false;
                 } else {
@@ -190,7 +190,7 @@ public final class JsonStructureMatchers {
             description.appendText(" }");
         }
 
-        public ObjectNodeMatcher withProperty(String key, Matcher<? extends JsonNode> value) {
+        public <N extends JsonNode> ObjectNodeMatcher withProperty(String key, Matcher<? super N> value) {
             Preconditions.checkNotNull(key, "property key must not be null");
             propertyMatchers.put(key, value);
             return this;
@@ -246,7 +246,7 @@ public final class JsonStructureMatchers {
         return jsonString(equalTo(value));
     }
 
-    public static Matcher<TextNode> jsonString(final Matcher<String> valueMatcher) {
+    public static Matcher<TextNode> jsonString(final Matcher<? super String> valueMatcher) {
         return new TypeSafeDiagnosingMatcher<TextNode>() {
             @Override
             protected boolean matchesSafely(TextNode item, Description mismatchDescription) {
@@ -289,7 +289,7 @@ public final class JsonStructureMatchers {
         return jsonNumberLong(equalTo(n));
     }
 
-    public static Matcher<NumericNode> jsonNumberLong(final Matcher<Long> matcher) {
+    public static Matcher<NumericNode> jsonNumberLong(final Matcher<? super Long> matcher) {
         return new TypeSafeDiagnosingMatcher<NumericNode>() {
             @Override
             protected boolean matchesSafely(NumericNode item, Description mismatchDescription) {
@@ -306,7 +306,7 @@ public final class JsonStructureMatchers {
         };
     }
 
-    public static Matcher<NumericNode> jsonNumber(final Matcher<Double> matcher) {
+    public static Matcher<NumericNode> jsonNumber(final Matcher<? super Double> matcher) {
         return new TypeSafeDiagnosingMatcher<NumericNode>() {
             @Override
             protected boolean matchesSafely(NumericNode item, Description mismatchDescription) {
@@ -327,7 +327,7 @@ public final class JsonStructureMatchers {
         return jsonInt(equalTo(n));
     }
 
-    public static Matcher<IntNode> jsonInt(final Matcher<Integer> matcher) {
+    public static Matcher<IntNode> jsonInt(final Matcher<? super Integer> matcher) {
         return new TypeSafeDiagnosingMatcher<IntNode>() {
             @Override
             protected boolean matchesSafely(IntNode item, Description mismatchDescription) {
@@ -348,7 +348,7 @@ public final class JsonStructureMatchers {
         return jsonLong(equalTo(n));
     }
 
-    public static Matcher<LongNode> jsonLong(final Matcher<Long> matcher) {
+    public static Matcher<LongNode> jsonLong(final Matcher<? super Long> matcher) {
         return new TypeSafeDiagnosingMatcher<LongNode>() {
             @Override
             protected boolean matchesSafely(LongNode item, Description mismatchDescription) {
@@ -373,7 +373,7 @@ public final class JsonStructureMatchers {
         return jsonDouble(closeTo(n, tolerance));
     }
 
-    public static Matcher<DoubleNode> jsonDouble(final Matcher<Double> matcher) {
+    public static Matcher<DoubleNode> jsonDouble(final Matcher<? super Double> matcher) {
         return new TypeSafeDiagnosingMatcher<DoubleNode>() {
             @Override
             protected boolean matchesSafely(DoubleNode item, Description mismatchDescription) {
@@ -394,7 +394,7 @@ public final class JsonStructureMatchers {
         return jsonBoolean(equalTo(n));
     }
 
-    public static Matcher<BooleanNode> jsonBoolean(final Matcher<Boolean> matcher) {
+    public static Matcher<BooleanNode> jsonBoolean(final Matcher<? super Boolean> matcher) {
         return new TypeSafeDiagnosingMatcher<BooleanNode>() {
             @Override
             protected boolean matchesSafely(BooleanNode item, Description mismatchDescription) {

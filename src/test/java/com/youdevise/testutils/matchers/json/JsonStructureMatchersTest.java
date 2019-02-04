@@ -1,20 +1,32 @@
 package com.youdevise.testutils.matchers.json;
 
-import java.util.List;
-import java.util.function.Function;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Test;
+
+import java.util.List;
+import java.util.function.Function;
 
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_giving_a_mismatch_description_of;
 import static com.youdevise.testutils.matchers.MatcherMatcher.a_matcher_that_matches;
 import static com.youdevise.testutils.matchers.json.JsonEquivalenceMatchers.equivalentJsonNode;
-import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.*;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jacksonTree;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.json;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonAnyNumber;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonAnyObject;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonAnyString;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonArray;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonBoolean;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonBytes;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonDouble;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonInt;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonLong;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonNull;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonNumber;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonObject;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.jsonString;
+import static com.youdevise.testutils.matchers.json.JsonStructureMatchers.makesJsonStructuredAs;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,6 +35,7 @@ import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
@@ -119,12 +132,12 @@ public class JsonStructureMatchersTest {
 
     @Test
     public void rejects_empty_string() {
-        assertThat("", is(not(json(anySubclassOf(JsonNode.class)))));
+        assertThat("", is(not(json(instanceOf(JsonNode.class)))));
     }
 
     @Test
     public void rejects_laxly_formatted_input() {
-        assertThat("{ foo: 1 }", is(not(json(anySubclassOf(JsonNode.class)))));
+        assertThat("{ foo: 1 }", is(not(json(instanceOf(JsonNode.class)))));
     }
 
     @Test
@@ -266,21 +279,5 @@ public class JsonStructureMatchersTest {
         Function<List<String>, String> makeJsonFromList = (List<String> l) -> l.get(0);
         assertThat(makesJsonStructuredAs(makeJsonFromList, jsonAnyObject()), is(a_matcher_that_matches(singletonList("{}"))));
         assertThat(makesJsonStructuredAs(makeJsonFromList, jsonAnyObject()), is(a_matcher_giving_a_mismatch_description_of(singletonList("zzz"), containsString("Invalid JSON"))));
-    }
-
-    private static <T> Matcher<? extends T> anySubclassOf(final Class<T> clazz) {
-        return new TypeSafeDiagnosingMatcher<T>() {
-
-            @Override
-            protected boolean matchesSafely(T item, Description mismatchDescription) {
-                mismatchDescription.appendText("was a ").appendValue(item.getClass());
-                return clazz.isAssignableFrom(item.getClass());
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("something extending ").appendValue(clazz);
-            }
-        };
     }
 }
