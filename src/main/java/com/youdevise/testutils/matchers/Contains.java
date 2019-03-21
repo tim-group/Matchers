@@ -9,6 +9,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 
+/* IntelliJ will flag several type parameters as redundant, but in fact javac 11 and 12 require them. */
+@SuppressWarnings("RedundantTypeArguments")
 public final class Contains {
     private Contains() { }
 
@@ -23,11 +25,11 @@ public final class Contains {
 
     @SafeVarargs
     public static <T> Matcher<Iterable<T>> inOrder(final Matcher<? super T>... expected) {
-        return Contains.inOrder(Arrays.asList(expected));
+        return Contains.<T> inOrder(Arrays.asList(expected));
     }
 
     public static <T> Matcher<Iterable<T>> inOrder(final Iterable<Matcher<? super T>> expected) {
-        return Contains.inOrder(Lists.newArrayList(expected));
+        return Contains.<T> inOrder(Lists.newArrayList(expected));
     }
 
     public static <T> Matcher<Iterable<T>> inOrder(final List<Matcher<? super T>> expected) {
@@ -55,11 +57,11 @@ public final class Contains {
 
     @SafeVarargs
     public static <T> Matcher<Iterable<T>> inAnyOrder(final Matcher<? super T>... expected) {
-        return Contains.inAnyOrder(Arrays.asList(expected));
+        return Contains.<T> inAnyOrder(Arrays.asList(expected));
     }
 
     public static <T> Matcher<Iterable<T>> inAnyOrder(final Iterable<Matcher<? super T>> expected) {
-        return Contains.inAnyOrder(Lists.newArrayList(expected));
+        return Contains.<T> inAnyOrder(Lists.newArrayList(expected));
     }
 
     public static <T> Matcher<Iterable<T>> inAnyOrder(final List<Matcher<? super T>> expected) {
@@ -77,11 +79,11 @@ public final class Contains {
 
     @SafeVarargs
     public static <T> Matcher<Iterable<T>> theItems(final Matcher<T>... expected) {
-        return Contains.theItems(Arrays.asList((Matcher<? super T>[]) expected));
+        return Contains.<T> theItems(Arrays.asList((Matcher<? super T>[]) expected));
     }
 
     public static <T> Matcher<Iterable<T>> theItems(final Iterable<Matcher<? super T>> expected) {
-        return Contains.theItems(Lists.newArrayList(expected));
+        return Contains.<T> theItems(Lists.newArrayList(expected));
     }
 
     public static <T> Matcher<Iterable<T>> theItems(final List<Matcher<? super T>> expected) {
