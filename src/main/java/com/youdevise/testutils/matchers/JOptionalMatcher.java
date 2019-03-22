@@ -1,29 +1,28 @@
 package com.youdevise.testutils.matchers;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
+
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
-
 import static org.hamcrest.Matchers.equalTo;
 
-@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class JOptionalMatcher {
     private JOptionalMatcher() {
     }
 
-    public static <T> Matcher<Optional<? super T>> isValue(T value) {
+    public static <T> Matcher<Optional<? extends T>> isValue(T value) {
         return isPresent(equalTo(value));
     }
 
-    public static <T> Matcher<Optional<? super T>> isPresent(final Matcher<T> valueMatcher) {
-        return new TypeSafeDiagnosingMatcher<Optional<? super T>>() {
+    public static <T> Matcher<Optional<? extends T>> isPresent(final Matcher<? super T> valueMatcher) {
+        return new TypeSafeDiagnosingMatcher<Optional<? extends T>>() {
             @Override
-            protected boolean matchesSafely(Optional<? super T> item, Description mismatchDescription) {
+            protected boolean matchesSafely(Optional<? extends T> item, Description mismatchDescription) {
                 if (!item.isPresent()) {
                     mismatchDescription.appendText("value was empty");
                     return false;
@@ -42,10 +41,10 @@ public final class JOptionalMatcher {
         };
     }
 
-    public static <T> Matcher<Optional<? super T>> isEmpty(final Class<T> clazz) {
-        return new TypeSafeDiagnosingMatcher<Optional<? super T>>() {
+    public static <T> Matcher<Optional<? extends T>> isEmpty(final Class<T> clazz) {
+        return new TypeSafeDiagnosingMatcher<Optional<? extends T>>() {
             @Override
-            protected boolean matchesSafely(Optional<? super T> item, Description mismatchDescription) {
+            protected boolean matchesSafely(Optional<? extends T> item, Description mismatchDescription) {
                 if (item.isPresent()) {
                     mismatchDescription.appendText("value was present: ").appendValue(item.get());
                     return false;
@@ -60,10 +59,10 @@ public final class JOptionalMatcher {
         };
     }
 
-    public static <T> Matcher<Optional<T>> isEmpty() {
-        return new TypeSafeDiagnosingMatcher<Optional<T>>() {
+    public static <T> Matcher<Optional<? extends T>> isEmpty() {
+        return new TypeSafeDiagnosingMatcher<Optional<? extends T>>() {
             @Override
-            protected boolean matchesSafely(Optional<T> item, Description mismatchDescription) {
+            protected boolean matchesSafely(Optional<? extends T> item, Description mismatchDescription) {
                 if (item.isPresent()) {
                     mismatchDescription.appendText("value was present: ").appendValue(item.get());
                     return false;
