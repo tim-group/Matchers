@@ -1,13 +1,12 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.Comparator;
-
+import com.google.common.collect.Ordering;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.google.common.collect.Ordering;
+import java.util.Comparator;
 
-public class Sorted<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
+public class Sorted<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends T>> {
 
     public static final String ASCENDING = "ascending";
     public static final String DESCENDING = "descending";
@@ -56,7 +55,7 @@ public class Sorted<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
     }
 
     @Override
-    protected boolean matchesSafely(Iterable<T> item, Description mismatchDescription) {
+    protected boolean matchesSafely(Iterable<? extends T> item, Description mismatchDescription) {
         if (ordering.isOrdered(item)) {
             return true;
         }

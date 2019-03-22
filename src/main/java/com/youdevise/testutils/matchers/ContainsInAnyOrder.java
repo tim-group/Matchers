@@ -1,24 +1,24 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({ "rawtypes" })
     public ContainsInAnyOrder(List<Matcher<? super T>> expected) {
         super(expected, (expected == null || expected.size() == 0)
-                            ? (Matcher)Matchers.emptyIterable()
-                            : (Matcher)Matchers.containsInAnyOrder(expected));
+                            ? Matchers.emptyIterable()
+                            : Matchers.containsInAnyOrder(expected));
     }
 
     @Override
-    protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, List<Matcher<? super T>> expected) {
-        final List<T> actualList = listOf(actual);
+    protected void diagnoseFailures(Iterable<? extends T> actual, Description mismatchDescription, List<Matcher<? super T>> expected) {
+        final List<? extends T> actualList = listOf(actual);
 
         if (actualCollectionIsEmpty(mismatchDescription, actualList)) {
             return;
@@ -36,8 +36,8 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
         describeMismatchList(mismatchDescription, "Unexpected items", actualList, unexpectedIndices);
     }
 
-    private List<Integer> unsatisfiedIndices(List<T> actualList, List<Matcher<? super T>> expected) {
-        final List<Integer> unsatisfied = new ArrayList<Integer>();
+    private List<Integer> unsatisfiedIndices(List<? extends T> actualList, List<Matcher<? super T>> expected) {
+        final List<Integer> unsatisfied = new ArrayList<>();
         for (int i = 0; i < expected.size(); i++) {
             final Matcher<? super T> expectedItem = expected.get(i);
             if (!Matchers.hasItem(expectedItem).matches(actualList)) {
@@ -47,8 +47,8 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
         return unsatisfied;
     }
 
-    private List<Integer> unexpectedIndices(List<T> actualList, List<Matcher<? super T>> expected) {
-        final List<Integer> unexpected = new ArrayList<Integer>();
+    private List<Integer> unexpectedIndices(List<? extends T> actualList, List<Matcher<? super T>> expected) {
+        final List<Integer> unexpected = new ArrayList<>();
         for (int i = 0; i < actualList.size(); i++) {
             if (!Matchers.anyOf(expected).matches(actualList.get(i))) {
                 unexpected.add(i);
@@ -60,7 +60,7 @@ public class ContainsInAnyOrder<T> extends CollectionMatcher<T> {
     private void describeSingleMismatch(Description mismatchDescription,
                                         List<Matcher<? super T>> expected,
                                         List<Integer> unsatisfiedIndices,
-                                        List<T> actualList,
+                                        List<? extends T> actualList,
                                         List<Integer> unexpectedIndices) {
         if ((unsatisfiedIndices.size() == 1) && (unexpectedIndices.size() == 1)) {
             final int unsatisfiedIndex = unsatisfiedIndices.get(0);

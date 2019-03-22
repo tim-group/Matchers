@@ -1,19 +1,19 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-public abstract class CollectionMatcher<T> extends TypeSafeDiagnosingMatcher<Iterable<T>> {
+import java.util.ArrayList;
+import java.util.List;
 
-    private final Matcher<Iterable<T>> contains;
+public abstract class CollectionMatcher<T> extends TypeSafeDiagnosingMatcher<Iterable<? extends T>> {
+
+    private final Matcher<Iterable<? extends T>> contains;
     private final List<Matcher<? super T>> expected;
 
 
-    public CollectionMatcher(List<Matcher<? super T>> expected, Matcher<Iterable<T>> contains) {
+    public CollectionMatcher(List<Matcher<? super T>> expected, Matcher<Iterable<? extends T>> contains) {
         this.expected = expected;
         this.contains = contains;
     }
@@ -24,22 +24,22 @@ public abstract class CollectionMatcher<T> extends TypeSafeDiagnosingMatcher<Ite
     }
 
     @Override
-    protected boolean matchesSafely(Iterable<T> actual, Description mismatchDescription) {
-        final List<T> actualList = listOf(actual);
+    protected boolean matchesSafely(Iterable<? extends T> actual, Description mismatchDescription) {
+        final List<? extends T> actualList = listOf(actual);
         diagnoseFailures(actual, mismatchDescription, expected);
         mismatchDescription.appendText("\n\n\tComplete actual iterable: ").appendValue(actualList);
         return contains.matches(actual);
     }
 
-    protected final List<T> listOf(Iterable<T> actual) {
-        final List<T> actualList = new ArrayList<T>();
-        for (final T t : actual) {
+    public static <A> List<A> listOf(Iterable<A> actual) {
+        final List<A> actualList = new ArrayList<>();
+        for (final A t : actual) {
             actualList.add(t);
         }
         return actualList;
     }
 
-    protected final boolean actualCollectionIsEmpty(Description mismatchDescription, List<T> actualList) {
+    protected final boolean actualCollectionIsEmpty(Description mismatchDescription, List<? extends T> actualList) {
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
             return true;
@@ -47,5 +47,5 @@ public abstract class CollectionMatcher<T> extends TypeSafeDiagnosingMatcher<Ite
         return false;
     }
 
-    protected abstract void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, List<Matcher<? super T>> expectedMatcher);
+    protected abstract void diagnoseFailures(Iterable<? extends T> actual, Description mismatchDescription, List<Matcher<? super T>> expectedMatcher);
 }

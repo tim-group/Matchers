@@ -1,10 +1,10 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.List;
-
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+
+import java.util.List;
 
 public class ContainsInOrder<T> extends CollectionMatcher<T> {
 
@@ -14,8 +14,8 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
     }
 
     @Override
-    protected void diagnoseFailures(Iterable<T> actual, Description mismatchDescription, List<Matcher<? super T>> expected) {
-        List<T> actualList = listOf(actual);
+    protected void diagnoseFailures(Iterable<? extends T> actual, Description mismatchDescription, List<Matcher<? super T>> expected) {
+        List<? extends T> actualList = listOf(actual);
 
         if (actualList.isEmpty()) {
             mismatchDescription.appendText("the actual collection was empty ");
@@ -41,7 +41,7 @@ public class ContainsInOrder<T> extends CollectionMatcher<T> {
         describeNonCorrespondances(mismatchDescription, actualList, expected);
     }
 
-    private void describeNonCorrespondances(Description mismatchDescription, List<T> actualList, List<Matcher<? super T>> expected) {
+    private void describeNonCorrespondances(Description mismatchDescription, List<? extends T> actualList, List<Matcher<? super T>> expected) {
         boolean first = true;
         for (int i = 0; i < Math.min(expected.size(), actualList.size()); i++) {
             if (itemsDontCorrespond(actualList.get(i), expected.get(i))) {

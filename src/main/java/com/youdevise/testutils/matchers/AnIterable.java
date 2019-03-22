@@ -1,18 +1,17 @@
 package com.youdevise.testutils.matchers;
 
-import java.util.Comparator;
-
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Ordering;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Ordering;
+import java.util.Comparator;
 
 import static com.google.common.base.Predicates.instanceOf;
 import static com.google.common.base.Predicates.not;
 
-public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? super T>> {
+public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<?>> {
     
     public static <T> AnIterable<T> of(Class<T> klass) {
         return new AnIterable<T>(klass);
@@ -24,7 +23,7 @@ public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? super T>
         this.klass = klass;
     }
     
-    public AnIterableWhich<T> which(Matcher<Iterable<T>> matcher) {
+    public AnIterableWhich<T> which(Matcher<? super Iterable<? extends T>> matcher) {
         return new AnIterableWhich<T>(this, matcher);
     }
     
@@ -32,8 +31,9 @@ public class AnIterable<T> extends TypeSafeDiagnosingMatcher<Iterable<? super T>
     public void describeTo(Description description) {
         description.appendText("an iterable of ").appendText(klass.getName());
     }
+
     @Override
-    protected boolean matchesSafely(Iterable<? super T> item, Description mismatchDescription) {
+    protected boolean matchesSafely(Iterable<?> item, Description mismatchDescription) {
         if (Iterables.any(item, not(instanceOf(klass)))) {
             mismatchDescription.appendText("not all elements were instances of ").appendText(klass.getName());
             return false;
