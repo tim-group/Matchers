@@ -131,7 +131,7 @@ public final class JOptionalMatcher {
         return equalTo(OptionalLong.empty());
     }
 
-    public static <T> Matcher<OptionalDouble> isDoubleValue(int value) {
+    public static <T> Matcher<OptionalDouble> isDoubleValue(double value) {
         return equalTo(OptionalDouble.of(value));
     }
 
