@@ -81,7 +81,7 @@ public final class JOptionalMatcher {
         return equalTo(OptionalInt.of(value));
     }
 
-    public static <T> Matcher<OptionalInt> isPresentInt(Matcher<Integer> valueMatcher) {
+    public static <T> Matcher<OptionalInt> isPresentInt(Matcher<? super Integer> valueMatcher) {
         return new TypeSafeDiagnosingMatcher<OptionalInt>() {
             @Override
             protected boolean matchesSafely(OptionalInt item, Description mismatchDescription) {
@@ -108,7 +108,7 @@ public final class JOptionalMatcher {
         return equalTo(OptionalLong.of(value));
     }
 
-    public static <T> Matcher<OptionalLong> isPresentLong(Matcher<Long> valueMatcher) {
+    public static <T> Matcher<OptionalLong> isPresentLong(Matcher<? super Long> valueMatcher) {
         return new TypeSafeDiagnosingMatcher<OptionalLong>() {
             @Override
             protected boolean matchesSafely(OptionalLong item, Description mismatchDescription) {
@@ -135,7 +135,7 @@ public final class JOptionalMatcher {
         return equalTo(OptionalDouble.of(value));
     }
 
-    public static <T> Matcher<OptionalDouble> isPresentDouble(Matcher<Double> valueMatcher) {
+    public static <T> Matcher<OptionalDouble> isPresentDouble(Matcher<? super Double> valueMatcher) {
         return new TypeSafeDiagnosingMatcher<OptionalDouble>() {
             @Override
             protected boolean matchesSafely(OptionalDouble item, Description mismatchDescription) {
