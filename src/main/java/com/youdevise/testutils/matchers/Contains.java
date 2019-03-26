@@ -2,6 +2,7 @@ package com.youdevise.testutils.matchers;
 
 import com.google.common.collect.Lists;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,10 @@ import static org.hamcrest.Matchers.equalTo;
 @SuppressWarnings("RedundantTypeArguments")
 public final class Contains {
     private Contains() { }
+
+    public static Matcher<Iterable<?>> nothing() {
+        return Matchers.emptyIterable();
+    }
 
     @SafeVarargs
     public static <T> Matcher<Iterable<? extends T>> inOrder(final T... expected) {
