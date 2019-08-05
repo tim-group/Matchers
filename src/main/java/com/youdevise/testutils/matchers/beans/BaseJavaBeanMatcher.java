@@ -1,23 +1,21 @@
 package com.youdevise.testutils.matchers.beans;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-
+import static com.youdevise.testutils.matchers.beans.PropertyMatcher.an_object_with_property;
 import static java.util.Arrays.asList;
-
 import static org.hamcrest.Matchers.allOf;
 
-import static com.youdevise.testutils.matchers.beans.PropertyMatcher.an_object_with_property;
+public abstract class BaseJavaBeanMatcher<T> extends BaseMatcher<Object> {
 
-public abstract class BaseJavaBeanMatcher<T> extends BaseMatcher<T> {
-
-    private final List<Matcher<?>> matchers = new ArrayList<Matcher<?>>();
+    private final List<Matcher<?>> matchers = new ArrayList<>();
     private final String objectTypeName;
     private final Class<T> expectedType;
     
