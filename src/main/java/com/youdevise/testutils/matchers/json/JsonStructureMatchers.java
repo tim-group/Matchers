@@ -192,42 +192,49 @@ public final class JsonStructureMatchers {
 
         public <N extends JsonNode> ObjectNodeMatcher withProperty(String key, Matcher<? super N> value) {
             Preconditions.checkNotNull(key, "property key must not be null");
+            Preconditions.checkState(!propertyMatchers.containsKey(key), "property '" + key + "' specified multiple times");
             propertyMatchers.put(key, value);
             return this;
         }
 
         public ObjectNodeMatcher withProperty(String key, int value) {
             Preconditions.checkNotNull(key, "property key must not be null");
+            Preconditions.checkState(!propertyMatchers.containsKey(key), "property '" + key + "' specified multiple times");
             propertyMatchers.put(key, jsonInt(value));
             return this;
         }
 
         public ObjectNodeMatcher withProperty(String key, double value) {
             Preconditions.checkNotNull(key, "property key must not be null");
+            Preconditions.checkState(!propertyMatchers.containsKey(key), "property '" + key + "' specified multiple times");
             propertyMatchers.put(key, jsonDouble(value));
             return this;
         }
 
         public ObjectNodeMatcher withProperty(String key, boolean value) {
             Preconditions.checkNotNull(key, "property key must not be null");
+            Preconditions.checkState(!propertyMatchers.containsKey(key), "property '" + key + "' specified multiple times");
             propertyMatchers.put(key, jsonBoolean(value));
             return this;
         }
 
         public ObjectNodeMatcher withProperty(String key, String value) {
             Preconditions.checkNotNull(key, "property key must not be null");
+            Preconditions.checkState(!propertyMatchers.containsKey(key), "property '" + key + "' specified multiple times");
             propertyMatchers.put(key, jsonString(value));
             return this;
         }
 
         public ObjectNodeMatcher withPropertyJSON(String key, String json) {
             Preconditions.checkNotNull(key, "property key must not be null");
+            Preconditions.checkState(!propertyMatchers.containsKey(key), "property '" + key + "' specified multiple times");
             propertyMatchers.put(key, equivalentJsonNode(json));
             return this;
         }
 
         public ObjectNodeMatcher withoutProperty(String key) {
             Preconditions.checkNotNull(key, "property key must not be null");
+            Preconditions.checkState(!propertyMatchers.containsKey(key), "property '" + key + "' specified multiple times");
             excludedProperties.add(key);
             return this;
         }
