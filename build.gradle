@@ -1,5 +1,5 @@
 plugins {
-    id "com.timgroup.jarmangit" version "1.1.86" apply false
+    id "com.timgroup.jarmangit" version "1.1.113" apply false
 }
 
 allprojects {
@@ -18,7 +18,7 @@ ext {
 allprojects {
     apply plugin: "java-library"
 
-    tasks.withType(Jar).all {
+    tasks.withType(Jar).configureEach {
         manifest {
             attributes(
                     'Implementation-Title': project.name,
@@ -28,7 +28,7 @@ allprojects {
         }
     }
 
-    tasks.withType(JavaCompile).all {
+    tasks.withType(JavaCompile).configureEach {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
         options.encoding = "UTF-8"
@@ -46,12 +46,15 @@ allprojects {
 
     apply plugin: 'maven-publish'
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
+    tasks.register("sourcesJar", Jar) {
+        dependsOn("classes")
         classifier = 'sources'
         from sourceSets.main.allSource
     }
 
-    assemble.dependsOn(sourcesJar)
+    tasks.named("assemble").configure {
+        dependsOn("sourcesJar")
+    }
 
     afterEvaluate {
         publishing {
