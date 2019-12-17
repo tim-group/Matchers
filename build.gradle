@@ -28,9 +28,13 @@ allprojects {
         }
     }
 
+    java {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+        withSourcesJar()
+    }
+
     tasks.withType(JavaCompile).configureEach {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
         options.encoding = "UTF-8"
         options.incremental = true
         options.deprecation = true
@@ -45,16 +49,6 @@ allprojects {
     }
 
     apply plugin: 'maven-publish'
-
-    tasks.register("sourcesJar", Jar) {
-        dependsOn("classes")
-        classifier = 'sources'
-        from sourceSets.main.allSource
-    }
-
-    tasks.named("assemble").configure {
-        dependsOn("sourcesJar")
-    }
 
     afterEvaluate {
         publishing {
@@ -73,7 +67,6 @@ allprojects {
                             : project == rootProject ? project.name
                             : rootProject.name + "-" + project.name
                     from components.java
-                    artifact(sourcesJar)
                 }
             }
         }
