@@ -1,5 +1,11 @@
+plugins {
+    id "com.timgroup.jarmangit"
+    id "java-common-conventions"
+    id "java-publishing-conventions"
+}
+
 ext {
-    artifactId = 'HttpClientMatchers'
+    artifactId = "HttpClientMatchers"
 }
 
 dependencies {

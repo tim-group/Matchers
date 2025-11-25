@@ -1,76 +1,11 @@
 plugins {
-    id "com.timgroup.jarmangit" version "1.1.113" apply false
-}
-
-allprojects {
-    apply plugin: 'com.timgroup.jarmangit'
-
-    group = 'com.youdevise'
-    if (System.getenv('BUILD_NUMBER') != null) {
-        version = "0.0." + System.getenv('BUILD_NUMBER')
-    }
+    id "com.timgroup.jarmangit" version "1.2.195"
+    id "java-common-conventions"
+    id "java-publishing-conventions"
 }
 
 ext {
     jacksonVersion = '2.8.7'
-}
-
-allprojects {
-    apply plugin: "java-library"
-
-    tasks.withType(Jar).configureEach {
-        manifest {
-            attributes(
-                    'Implementation-Title': project.name,
-                    'Implementation-Version': project.version,
-                    'Implementation-Vendor': 'TIM Group Ltd'
-            )
-        }
-    }
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-        withSourcesJar()
-    }
-
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = "UTF-8"
-        options.incremental = true
-        options.deprecation = true
-        options.compilerArgs << "-parameters"
-        options.compilerArgs << "-Xlint:unchecked"
-    }
-
-    repositories {
-        maven {
-            url = "$repoUrl/groups/public"
-        }
-    }
-
-    apply plugin: 'maven-publish'
-
-    afterEvaluate {
-        publishing {
-            repositories {
-                maven {
-                    url "$repoUrl/repositories/yd-release-candidates"
-                    credentials {
-                        username = project.repoUsername
-                        password = project.repoPassword
-                    }
-                }
-            }
-            publications {
-                mavenJava(MavenPublication) {
-                    artifactId project.ext.has('artifactId') ? project.ext.artifactId
-                            : project == rootProject ? project.name
-                            : rootProject.name + "-" + project.name
-                    from components.java
-                }
-            }
-        }
-    }
 }
 
 dependencies {

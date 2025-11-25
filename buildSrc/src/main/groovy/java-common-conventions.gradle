@@ -1,0 +1,60 @@
+plugins {
+    id "java-library"
+}
+
+group = 'com.youdevise'
+
+def buildNumber = providers.environmentVariable("BUILD_NUMBER")
+if (buildNumber.present) version = "0.0.${buildNumber.get()}"
+
+tasks.withType(Jar).configureEach {
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'TIM Group'
+        )
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.deprecation = true
+    options.compilerArgs << "-parameters"
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    withSourcesJar()
+}
+
+def nexusRepoUrl = providers.gradleProperty("repoUrl")
+def codeartifactUrl = providers.environmentVariable("CODEARTIFACT_URL")
+        .orElse(providers.gradleProperty("codeartifact.url"))
+        .orElse("https://timgroup-148217964156.d.codeartifact.eu-west-1.amazonaws.com/maven/jars/")
+def codeartifactToken = providers.environmentVariable("CODEARTIFACT_TOKEN")
+        .orElse(providers.gradleProperty("codeartifact.token"))
+
+repositories {
+    mavenCentral()
+    if (nexusRepoUrl.present) {
+        maven {
+            name = "nexus"
+            url = "${nexusRepoUrl.get()}/repositories/yd-release-candidates"
+            allowInsecureProtocol = true
+        }
+    }
+    if (codeartifactUrl.present && codeartifactToken.present) {
+        maven {
+            name = "codeartifact"
+            url = codeartifactUrl.get()
+            credentials {
+                username = "aws"
+                password = codeartifactToken.get()
+            }
+        }
+    }
+}

@@ -1,0 +1,52 @@
+plugins {
+    id "maven-publish"
+}
+
+def nexusRepoUrl = providers.gradleProperty("repoUrl")
+def nexusRepoUsername = providers.gradleProperty("repoUsername")
+def nexusRepoPassword = providers.gradleProperty("repoPassword")
+def codeartifactUrl = providers.environmentVariable("CODEARTIFACT_URL")
+        .orElse(providers.gradleProperty("codeartifact.url"))
+        .orElse("https://timgroup-148217964156.d.codeartifact.eu-west-1.amazonaws.com/maven/jars/")
+def codeartifactToken = providers.environmentVariable("CODEARTIFACT_TOKEN")
+        .orElse(providers.gradleProperty("codeartifact.token"))
+
+publishing {
+    repositories {
+        if (nexusRepoUrl.present && nexusRepoUsername.present && nexusRepoPassword.present) {
+            maven {
+                name = "nexus"
+                url = "${nexusRepoUrl.get()}/repositories/yd-release-candidates"
+                credentials {
+                    username = nexusRepoUsername.get()
+                    password = nexusRepoPassword.get()
+                }
+                allowInsecureProtocol = true
+            }
+        }
+        if (codeartifactUrl.present && codeartifactToken.present) {
+            maven {
+                name = "codeartifact"
+                url = codeartifactUrl.get()
+                credentials {
+                    username = "aws"
+                    password = codeartifactToken.get()
+                }
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    println("java-publishing-conventions afterEvaluate")
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId project.ext.has('artifactId') ? project.ext.artifactId
+                        : project == rootProject ? project.name
+                        : rootProject.name + "-" + project.name
+                from components.java
+            }
+        }
+    }
+}
